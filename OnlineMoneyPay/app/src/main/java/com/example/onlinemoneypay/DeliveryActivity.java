@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -18,12 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeliveryActivity extends AppCompatActivity {
+    private static final String TAG = "DeliveryActivity";
     private Toolbar toolbar;
     private RecyclerView deliveryRecyclerView;
     private Button changeORaddNewAddressBtn;
     private TextView totalAmount;
+    private Button continueBtn;
     private TextView fullname, fullAddress, pincode;
     public static final int SELECT_ADDRESS = 0;
+    private  int  totalItemPrice=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +40,7 @@ public class DeliveryActivity extends AppCompatActivity {
         fullname = findViewById(R.id.fullname);
         fullAddress = findViewById(R.id.address);
         pincode = findViewById(R.id.pincode);
-
+        continueBtn=findViewById(R.id.cart_continue_btn);
         deliveryRecyclerView = findViewById(R.id.delivery_recyclerview);
         changeORaddNewAddressBtn=findViewById(R.id.change_or_add_address_btn);
         totalAmount=findViewById(R.id.total_cart_amount);
@@ -54,6 +58,14 @@ public class DeliveryActivity extends AppCompatActivity {
         deliveryRecyclerView.setAdapter(cartAdapter);
         cartAdapter.notifyDataSetChanged();
 
+
+        for (int x = 0; x < MyCartFragment.cartItemModelsList.size(); x++) {
+            if (MyCartFragment.cartItemModelsList.get(x).getType() == CartItemModel.CART_ITEM) {
+                totalItemPrice = totalItemPrice + Integer.parseInt(MyCartFragment.cartItemModelsList.get(x).getProductPrice());
+            }
+        }
+
+
         changeORaddNewAddressBtn.setVisibility(View.VISIBLE);
         changeORaddNewAddressBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +76,19 @@ public class DeliveryActivity extends AppCompatActivity {
             }
         });
 
+        continueBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: Pressed..."+totalItemPrice);
+
+
+            }
+        });
       }
+
+    private void gettingAmount() {
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
