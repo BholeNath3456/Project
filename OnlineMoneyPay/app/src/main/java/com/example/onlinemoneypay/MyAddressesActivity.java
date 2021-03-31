@@ -93,6 +93,8 @@ public class MyAddressesActivity extends AppCompatActivity {
                             }
                         }
                     });
+                }else {
+                    finish();
                 }
 
             }
@@ -110,6 +112,13 @@ public class MyAddressesActivity extends AppCompatActivity {
             }
         });
         addressSaved.setText(String.valueOf(DBqueries.addressesModelList.size())+" saved addresses.");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        addressSaved.setText(String.valueOf(DBqueries.addressesModelList.size())+" saved addresses.");
+
     }
 
     public static void refreshItem(int deselect, int select) {
