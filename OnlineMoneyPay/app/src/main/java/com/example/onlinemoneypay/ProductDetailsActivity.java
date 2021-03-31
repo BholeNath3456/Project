@@ -233,7 +233,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 } else {
                     if (ALREADY_ADDED_TO_WISHLIST) {
 //                        DBqueries.removeWishlist(ProductDetailsActivity.this, product_ID);
-//                        ALREADY_ADDED_TO_WISHLIST = false;
+                       ALREADY_ADDED_TO_WISHLIST = false;
                         Toast.makeText(ProductDetailsActivity.this, "Already Added to WishList", Toast.LENGTH_SHORT).show();
                         addToWishlistBtn.setSupportImageTintList(ColorStateList.valueOf(Color.parseColor("#9e9e9e")));
                     } else {

@@ -1,6 +1,7 @@
 package com.example.onlinemoneypay;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ public class DBqueries {
     public static List<String> idList = new ArrayList<>();
     public static List<String> myRatedIds = new ArrayList<>();
     public static List<Long> myRating = new ArrayList<>();
+    public static  List<AddressesModel> addressesModelList =new ArrayList<>();
 
 
     public static void loadCategories(RecyclerView categoryRecyclerView, Context context) {
@@ -262,5 +264,40 @@ public class DBqueries {
             }
         });
     }
+    public static void loadAddresses(Context context) {
+        addressesModelList.clear();
+        FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_DATA").document("MY_ADDRESSES")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot documentSnapshot = task.getResult();
+
+                if (task.isSuccessful()) {
+                    long listSize = (long) documentSnapshot.get("list_size");
+                    Intent deliveryIntent;
+                    if (listSize == 0) {
+                        deliveryIntent = new Intent(context, AddAddressActivity.class);
+                    } else {
+
+//                        for(long x=1; x<listSize+1; x++ ){
+//                        addressesModelList.add(new AddressesModel(task.getResult().get("fullname_"+x).toString(),
+//                                task.getResult().get("address_"+x).toString(),
+//                                task.getResult().get("pincode_"+x).toString(),
+//                                (boolean)task.getResult().get("selected_"+x)));
+//                        }
+
+                        deliveryIntent = new Intent(context, DeliveryActivity.class);
+                    }
+                    context.startActivity(deliveryIntent);
+
+                } else {
+                    String error = task.getException().getMessage();
+                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+    }
+
 }
 

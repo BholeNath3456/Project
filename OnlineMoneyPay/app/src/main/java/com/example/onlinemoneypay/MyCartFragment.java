@@ -160,8 +160,9 @@ public class MyCartFragment extends Fragment {
         continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent deliveryIntent = new Intent(getContext(), AddAddressActivity.class);
-                getContext().startActivity(deliveryIntent);
+//                Intent deliveryIntent = new Intent(getContext(), AddAddressActivity.class);
+//                getContext().startActivity(deliveryIntent);
+                DBqueries.loadAddresses(getContext());
             }
         });
         return view;
