@@ -22,7 +22,8 @@ public class DeliveryActivity extends AppCompatActivity {
     private RecyclerView deliveryRecyclerView;
     private Button changeORaddNewAddressBtn;
     private TextView totalAmount;
-    public static final int SELECT_ADDRESS=0;
+    private TextView fullname, fullAddress, pincode;
+    public static final int SELECT_ADDRESS = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +33,9 @@ public class DeliveryActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle("Delivery");
+        fullname = findViewById(R.id.fullname);
+        fullAddress = findViewById(R.id.address);
+        pincode = findViewById(R.id.pincode);
 
         deliveryRecyclerView = findViewById(R.id.delivery_recyclerview);
         changeORaddNewAddressBtn=findViewById(R.id.change_or_add_address_btn);
@@ -58,6 +62,9 @@ public class DeliveryActivity extends AppCompatActivity {
                 startActivity(myAddressesIntent);
             }
         });
+        fullname.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFullname());
+        fullAddress.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAddress());
+        pincode.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getPincode());
     }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

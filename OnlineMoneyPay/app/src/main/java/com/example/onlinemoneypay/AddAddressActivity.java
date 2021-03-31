@@ -102,15 +102,21 @@ public class AddAddressActivity extends AppCompatActivity {
         } else {
 
 
-            String fullAddress = city + "," + locality + "," + flatNo + "," + landmark;
+            String fullAddress = flatNo + "," + locality + "," + landmark + "," + city + "," + state;
             Map<String, Object> addAddress = new HashMap();
-            addAddress.put("list_size", ((long) DBqueries.addressesModelList.size()+1));
-            addAddress.put("fullname_" + ((long) DBqueries.addressesModelList.size()+1), name + " - " + mobileNo);
-            addAddress.put("address_" + ((long) DBqueries.addressesModelList.size()+1), fullAddress);
-            addAddress.put("pincode_" + ((long) DBqueries.addressesModelList.size()+1), pincode);
-            addAddress.put("selected_" + ((long) DBqueries.addressesModelList.size()+1), true);
+            addAddress.put("list_size", ((long) DBqueries.addressesModelList.size() + 1));
+            if(alternateMobileNo.isEmpty()){
+                addAddress.put("fullname_" + ((long) DBqueries.addressesModelList.size() + 1), name + " - " + mobileNo);
+
+            }else {
+                addAddress.put("fullname_" + ((long) DBqueries.addressesModelList.size() + 1), name + " - " + mobileNo+" or "+alternateMobileNo);
+
+            }
+            addAddress.put("address_" + ((long) DBqueries.addressesModelList.size() + 1), fullAddress);
+            addAddress.put("pincode_" + ((long) DBqueries.addressesModelList.size() + 1), pincode);
+            addAddress.put("selected_" + ((long) DBqueries.addressesModelList.size() + 1), true);
             if (DBqueries.addressesModelList.size() > 0) {
-                addAddress.put("selected_" + (DBqueries.selectedAddress + 1) , false);
+                addAddress.put("selected_" + (DBqueries.selectedAddress + 1), false);
             }
             FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_DATA").document("MY_ADDRESSES")
                     .update(addAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -120,7 +126,13 @@ public class AddAddressActivity extends AppCompatActivity {
                         if (DBqueries.addressesModelList.size() > 0) {
                             DBqueries.addressesModelList.get(DBqueries.selectedAddress).setSelected(false);
                         }
-                        DBqueries.addressesModelList.add(new AddressesModel(name + " - " + mobileNo, fullAddress, pincode, true));
+                        if(alternateMobileNo.isEmpty()) {
+                            DBqueries.addressesModelList.add(new AddressesModel(name + " - " + mobileNo, fullAddress, pincode, true));
+                        }else {
+                            DBqueries.addressesModelList.add(new AddressesModel(name + " - " + mobileNo+"or"+alternateMobileNo, fullAddress, pincode, true));
+
+                        }
+                        DBqueries.selectedAddress=DBqueries.addressesModelList.size()-1;
                         Intent deliveryIntent = new Intent(AddAddressActivity.this, DeliveryActivity.class);
                         startActivity(deliveryIntent);
                         finish();
