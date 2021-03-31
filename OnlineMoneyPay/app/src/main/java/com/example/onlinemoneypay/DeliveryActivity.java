@@ -44,12 +44,13 @@ public class DeliveryActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager =new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         deliveryRecyclerView.setLayoutManager(layoutManager);
-        List<CartItemModel> cartItemModelsList=new ArrayList<>();
+      //  List<CartItemModel> cartItemModelsList=new ArrayList<>();
 //        cartItemModelsList.add(new CartItemModel(0,R.drawable.mobile1,"Pixel 2",2,"Rs. 3999/-","Rs. 9999/-",1,0,0));
 //        cartItemModelsList.add(new CartItemModel(0,R.drawable.mobile1,"Pixel 2",1,"Rs. 2999/-","Rs. 8999/-",1,1,1));
 //        cartItemModelsList.add(new CartItemModel(0,R.drawable.mobile1,"Pixel 2",0,"Rs. 1999/-","Rs. 5999/-",1,2,0));
 //        cartItemModelsList.add(new CartItemModel(1,"Price (3 items)", "Rs. 1673","Free","Rs.9899","Rs 50090/"));
-        CartAdapter cartAdapter=new CartAdapter(cartItemModelsList,totalAmount,false);
+
+        CartAdapter cartAdapter = new CartAdapter(MyCartFragment.cartItemModelsList, totalAmount,false);
         deliveryRecyclerView.setAdapter(cartAdapter);
         cartAdapter.notifyDataSetChanged();
 
@@ -62,10 +63,8 @@ public class DeliveryActivity extends AppCompatActivity {
                 startActivity(myAddressesIntent);
             }
         });
-        fullname.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFullname());
-        fullAddress.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAddress());
-        pincode.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getPincode());
-    }
+
+      }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -75,5 +74,12 @@ public class DeliveryActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        fullname.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFullname());
+        fullAddress.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAddress());
+        pincode.setText(DBqueries.addressesModelList.get(DBqueries.selectedAddress).getPincode());
 
+    }
 }

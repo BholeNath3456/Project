@@ -122,9 +122,26 @@ public class MyAddressesActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
+
+            if(DBqueries.selectedAddress!=previousAddress){
+                DBqueries.addressesModelList.get(DBqueries.selectedAddress).setSelected(false);
+                DBqueries.addressesModelList.get(previousAddress).setSelected(true);
+                DBqueries.selectedAddress=previousAddress;
+            }
             finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(DBqueries.selectedAddress!=previousAddress){
+            DBqueries.addressesModelList.get(DBqueries.selectedAddress).setSelected(false);
+            DBqueries.addressesModelList.get(previousAddress).setSelected(true);
+            DBqueries.selectedAddress=previousAddress;
+        }
+        super.onBackPressed();
+
     }
 }

@@ -21,11 +21,12 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
     private List<AddressesModel> addressesModelList;
     private int MODE;
 
-    private int preSelectedPosition=-1;
+    private int preSelectedPosition;
 
     public AddressesAdapter(List<AddressesModel> addressesModelList, int MODE) {
         this.addressesModelList = addressesModelList;
         this.MODE = MODE;
+        preSelectedPosition=DBqueries.selectedAddress;
     }
 
     @NonNull
@@ -91,29 +92,30 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
                             addressesModelList.get(preSelectedPosition).setSelected(false);
                             refreshItem(preSelectedPosition,position);
                             preSelectedPosition=position;
+                            DBqueries.selectedAddress=position;
                         }
 
                     }
                 });
 
             } else if (MODE == MANAGE_ADDRESS) {
-               optionContainer.setVisibility(View.GONE);
-               icon.setImageResource(R.drawable.ic_more);
-               icon.setOnClickListener(new View.OnClickListener() {
-                   @Override
-                   public void onClick(View v) {
-                       optionContainer.setVisibility(View.VISIBLE);
-                       refreshItem(preSelectedPosition,preSelectedPosition);
-                       preSelectedPosition=position;
-                   }
-               });
-               itemView.setOnClickListener(new View.OnClickListener() {
-                   @Override
-                   public void onClick(View v) {
-                       refreshItem(preSelectedPosition,preSelectedPosition);
-                       preSelectedPosition=-1;
-                   }
-               });
+                optionContainer.setVisibility(View.GONE);
+                icon.setImageResource(R.drawable.ic_more);
+                icon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        optionContainer.setVisibility(View.VISIBLE);
+                        refreshItem(preSelectedPosition,preSelectedPosition);
+                        preSelectedPosition=position;
+                    }
+                });
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        refreshItem(preSelectedPosition,preSelectedPosition);
+                        preSelectedPosition=-1;
+                    }
+                });
 
             }
         }
