@@ -63,26 +63,6 @@ public class AddAddressActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 checkInputs();
-//                                            String fullAddress=city.getText().toString()+","+locality.getText().toString()+","+flatNo.getText().toString()+","+landmark.getText().toString();
-//
-//                                            Map<String ,Object> addAddress=new HashMap();
-//                                            addAddress.put("list_size",(long)DBqueries.addressesModelList.size()+1);
-//                                            addAddress.put("fullname_"+DBqueries.addressesModelList.size()+1,name.getText().toString()+" - "+mobileNo.getText().toString());
-//                                            addAddress.put("address_"+DBqueries.addressesModelList.size()+1,fullAddress);
-//                                            addAddress.put("pincode_"+DBqueries.addressesModelList.size()+1,pincode.getText().toString());
-//
-//                                            FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_DATA").document("MY_ADDRESSES")
-//                                                    .update(addAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                                @Override
-//                                                public void onComplete(@NonNull Task<Void> task) {
-//                                                   if(task.isSuccessful()){
-//
-//                                                   }else {
-//                                                       String error = task.getException().getMessage();
-//                                                       Toast.makeText(AddAddressActivity.this, error, Toast.LENGTH_SHORT).show();
-//                                                   }
-//                                                }
-//                                            });
             }
         });
     }
@@ -90,14 +70,14 @@ public class AddAddressActivity extends AppCompatActivity {
     private void checkInputs() {
 
         String city = editTextCity.getText().toString().trim();
-        String locality=  editTextLocality.getText().toString().trim();
-        String flatNo= editTextFlatNo.getText().toString().trim();
-        String pincode= editTextPincode.getText().toString().trim();
-        String state=editTextState.getText().toString().trim();
-        String landmark= editTextLandmark.getText().toString().trim();
-        String name=editTextName.getText().toString().trim();
-        String mobileNo=editTextMobileNo.getText().toString().trim();
-        String alternateMobileNo=editTextAlternateMobileNo.getText().toString().trim();
+        String locality = editTextLocality.getText().toString().trim();
+        String flatNo = editTextFlatNo.getText().toString().trim();
+        String pincode = editTextPincode.getText().toString().trim();
+        String state = editTextState.getText().toString().trim();
+        String landmark = editTextLandmark.getText().toString().trim();
+        String name = editTextName.getText().toString().trim();
+        String mobileNo = editTextMobileNo.getText().toString().trim();
+        String alternateMobileNo = editTextAlternateMobileNo.getText().toString().trim();
         if (city.isEmpty()) {
             editTextCity.setError("City Required!");
             editTextCity.setFocusable(true);
@@ -120,13 +100,40 @@ public class AddAddressActivity extends AppCompatActivity {
             editTextMobileNo.setError("Mobile Required!");
             editTextMobileNo.setFocusable(true);
         } else {
-            Intent deliveryIntent = new Intent(AddAddressActivity.this, DeliveryActivity.class);
-            startActivity(deliveryIntent);
-            finish();
+
+
+            String fullAddress = city + "," + locality + "," + flatNo + "," + landmark;
+            Map<String, Object> addAddress = new HashMap();
+            addAddress.put("list_size", ((long) DBqueries.addressesModelList.size()+1));
+            addAddress.put("fullname_" + ((long) DBqueries.addressesModelList.size()+1), name + " - " + mobileNo);
+            addAddress.put("address_" + ((long) DBqueries.addressesModelList.size()+1), fullAddress);
+            addAddress.put("pincode_" + ((long) DBqueries.addressesModelList.size()+1), pincode);
+            addAddress.put("selected_" + ((long) DBqueries.addressesModelList.size()+1), true);
+            if (DBqueries.addressesModelList.size() > 0) {
+                addAddress.put("selected_" + (DBqueries.selectedAddress + 1) , false);
+            }
+            FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_DATA").document("MY_ADDRESSES")
+                    .update(addAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        if (DBqueries.addressesModelList.size() > 0) {
+                            DBqueries.addressesModelList.get(DBqueries.selectedAddress).setSelected(false);
+                        }
+                        DBqueries.addressesModelList.add(new AddressesModel(name + " - " + mobileNo, fullAddress, pincode, true));
+                        Intent deliveryIntent = new Intent(AddAddressActivity.this, DeliveryActivity.class);
+                        startActivity(deliveryIntent);
+                        finish();
+                    } else {
+                        String error = task.getException().getMessage();
+                        Toast.makeText(AddAddressActivity.this, error, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
         }
 
     }
-
 
 
     @Override

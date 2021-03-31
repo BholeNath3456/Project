@@ -37,7 +37,7 @@ public class DBqueries {
     public static List<String> myRatedIds = new ArrayList<>();
     public static List<Long> myRating = new ArrayList<>();
     public static  List<AddressesModel> addressesModelList =new ArrayList<>();
-
+    public static int selectedAddress = -1;
 
     public static void loadCategories(RecyclerView categoryRecyclerView, Context context) {
 
@@ -264,6 +264,7 @@ public class DBqueries {
             }
         });
     }
+
     public static void loadAddresses(Context context) {
         addressesModelList.clear();
         FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_DATA").document("MY_ADDRESSES")
@@ -279,12 +280,15 @@ public class DBqueries {
                         deliveryIntent = new Intent(context, AddAddressActivity.class);
                     } else {
 
-//                        for(long x=1; x<listSize+1; x++ ){
-//                        addressesModelList.add(new AddressesModel(task.getResult().get("fullname_"+x).toString(),
-//                                task.getResult().get("address_"+x).toString(),
-//                                task.getResult().get("pincode_"+x).toString(),
-//                                (boolean)task.getResult().get("selected_"+x)));
-//                        }
+                        for (long x = 1; x < listSize + 1; x++) {
+                            addressesModelList.add(new AddressesModel(task.getResult().get("fullname_" + x).toString(),
+                                    task.getResult().get("address_" + x).toString(),
+                                    task.getResult().get("pincode_" + x).toString(),
+                                    (boolean) task.getResult().get("selected_" + x)));
+                            if ((boolean) task.getResult().get("selected_" + x)) {
+                                selectedAddress = Integer.parseInt(String.valueOf(x - 1));
+                            }
+                        }
 
                         deliveryIntent = new Intent(context, DeliveryActivity.class);
                     }
@@ -298,6 +302,5 @@ public class DBqueries {
             }
         });
     }
-
 }
 
