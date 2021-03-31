@@ -105,11 +105,11 @@ public class AddAddressActivity extends AppCompatActivity {
             String fullAddress = flatNo + "," + locality + "," + landmark + "," + city + "," + state;
             Map<String, Object> addAddress = new HashMap();
             addAddress.put("list_size", ((long) DBqueries.addressesModelList.size() + 1));
-            if(alternateMobileNo.isEmpty()){
+            if (alternateMobileNo.isEmpty()) {
                 addAddress.put("fullname_" + ((long) DBqueries.addressesModelList.size() + 1), name + " - " + mobileNo);
 
-            }else {
-                addAddress.put("fullname_" + ((long) DBqueries.addressesModelList.size() + 1), name + " - " + mobileNo+" or "+alternateMobileNo);
+            } else {
+                addAddress.put("fullname_" + ((long) DBqueries.addressesModelList.size() + 1), name + " - " + mobileNo + " or " + alternateMobileNo);
 
             }
             addAddress.put("address_" + ((long) DBqueries.addressesModelList.size() + 1), fullAddress);
@@ -126,15 +126,17 @@ public class AddAddressActivity extends AppCompatActivity {
                         if (DBqueries.addressesModelList.size() > 0) {
                             DBqueries.addressesModelList.get(DBqueries.selectedAddress).setSelected(false);
                         }
-                        if(alternateMobileNo.isEmpty()) {
+                        if (alternateMobileNo.isEmpty()) {
                             DBqueries.addressesModelList.add(new AddressesModel(name + " - " + mobileNo, fullAddress, pincode, true));
-                        }else {
-                            DBqueries.addressesModelList.add(new AddressesModel(name + " - " + mobileNo+"or"+alternateMobileNo, fullAddress, pincode, true));
+                        } else {
+                            DBqueries.addressesModelList.add(new AddressesModel(name + " - " + mobileNo + "or" + alternateMobileNo, fullAddress, pincode, true));
 
                         }
-                        DBqueries.selectedAddress=DBqueries.addressesModelList.size()-1;
-                        Intent deliveryIntent = new Intent(AddAddressActivity.this, DeliveryActivity.class);
-                        startActivity(deliveryIntent);
+                        DBqueries.selectedAddress = DBqueries.addressesModelList.size() - 1;
+                        if(getIntent().getStringExtra("INTENT").equals("deliveryIntent")) {
+                            Intent deliveryIntent = new Intent(AddAddressActivity.this, DeliveryActivity.class);
+                            startActivity(deliveryIntent);
+                        }
                         finish();
                     } else {
                         String error = task.getException().getMessage();
