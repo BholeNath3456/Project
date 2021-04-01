@@ -9,11 +9,17 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SplashActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
@@ -75,9 +81,21 @@ public class SplashActivity extends AppCompatActivity {
     protected void onStartCheckCurrentUser() {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null) {
-            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            FirebaseFirestore.getInstance().collection("USERS").document(currentUser.getUid()).update("Last seen", FieldValue.serverTimestamp()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                  if(task.isSuccessful()){
+
+                      Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                      startActivity(intent);
+                      finish();
+                  }else {
+                      String error=task.getException().getMessage();
+                      Toast.makeText(SplashActivity.this, error, Toast.LENGTH_SHORT).show();
+                  }
+                }
+            });
+
         } else {
             Intent intent = new Intent(SplashActivity.this, RegisterActivity.class);
             startActivity(intent);
