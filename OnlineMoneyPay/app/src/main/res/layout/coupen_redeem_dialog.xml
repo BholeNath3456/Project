@@ -16,6 +16,7 @@
         android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView29" />
 
@@ -76,6 +77,7 @@
         android:text="Your Original Price"
         android:textAlignment="center"
         android:textStyle="bold"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/textView29"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/selected_coupen" />
@@ -86,9 +88,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="Price after coupen redeemption"
+        android:text="Your Cashback Price."
         android:textAlignment="center"
         android:textStyle="bold"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/selected_coupen" />
 
@@ -101,6 +104,7 @@
         android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/discounted_price"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/discounted_price" />

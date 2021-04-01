@@ -1,5 +1,7 @@
 package com.example.onlinemoneypay;
 
+import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,19 +15,16 @@ import java.util.Date;
 import java.util.List;
 
 public class MyRewardAdapter extends RecyclerView.Adapter<MyRewardAdapter.Viewholder> {
+    private static final String TAG = "MyRewardAdapter";
     private List<RewardModel> rewardModelList;
     private Boolean useMiniLayout=false;
-    private String   forCalculationOriginalPrice;
+
 
     public MyRewardAdapter(List<RewardModel> rewardModelList,Boolean useMiniLayout) {
         this.rewardModelList = rewardModelList;
         this.useMiniLayout=useMiniLayout;
     }
-    public MyRewardAdapter(List<RewardModel> rewardModelList,Boolean useMiniLayout,String   forCalculationOriginalPrice) {
-        this.rewardModelList = rewardModelList;
-        this.useMiniLayout=useMiniLayout;
-        this.forCalculationOriginalPrice=  forCalculationOriginalPrice;
-    }
+
 
     @NonNull
     @Override
@@ -73,6 +72,7 @@ public class MyRewardAdapter extends RecyclerView.Adapter<MyRewardAdapter.Viewho
         }
 
         private void setData(String type, Date validity, String body,String upperLimit, String lowerLimit, String discOramt) {
+
             if(type.equals("Discount")){
                 coupenTitle.setText(type);
             }
@@ -85,14 +85,22 @@ public class MyRewardAdapter extends RecyclerView.Adapter<MyRewardAdapter.Viewho
             coupenBody.setText(body);
             if(useMiniLayout){
                 itemView.setOnClickListener(new View.OnClickListener() {
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onClick(View v) {
-
+                        if(Long.valueOf(ProductDetailsActivity.forCalculationOriginalPrice)>Long.valueOf(lowerLimit)&&Long.valueOf(ProductDetailsActivity.forCalculationOriginalPrice)<Long.valueOf(upperLimit))
+                        {
+                            //(Long.valueOf(ProductDetailsActivity.forCalculationOriginalPrice)-disAmount)
+                            ProductDetailsActivity.originalPrice.setText(ProductDetailsActivity.forCalculationOriginalPrice);
+                           // String DisPrice=String.valueOf(Integer.parseInt(ProductDetailsActivity.forCalculationOriginalPrice)-Integer.parseInt(discOramt));
+                            ProductDetailsActivity.discountedPrice.setText(discOramt);
+                        }else {
+                            ProductDetailsActivity.discountedPrice.setText("Invalid Reward!");
+                        }
                         ProductDetailsActivity.coupenTitle.setText(type);
                         ProductDetailsActivity.coupenExpiryDate.setText(simpleDateFormat.format(validity));
                         ProductDetailsActivity.coupenBody.setText(body);
-                        ProductDetailsActivity.originalPrice.setText(forCalculationOriginalPrice);
-                        ProductDetailsActivity.discountedPrice.setText("Discount price");
+                        Log.d(TAG, "onClick: "+ProductDetailsActivity.forCalculationOriginalPrice);
                         ProductDetailsActivity.showDialogRecyclerView();
                     }
                 });
