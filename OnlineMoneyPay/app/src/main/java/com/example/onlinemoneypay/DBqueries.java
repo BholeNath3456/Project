@@ -314,41 +314,59 @@ public class DBqueries {
 
     public static void loadReward(Context context){
         rewardModelList.clear();
-        FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USERS_REWARDS").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot documentSnapshot: task.getResult()){
-                               if(documentSnapshot.get("type").toString().equals("Discount")){
-                                   rewardModelList.add(new RewardModel(
-                                            documentSnapshot.get("type").toString()
-                                           ,documentSnapshot.get("lower_limit").toString()
-                                           ,documentSnapshot.get("upper_limit").toString()
-                                           ,documentSnapshot.get("percentage").toString()
-                                           ,documentSnapshot.get("body").toString()
-                                           ,(Timestamp)documentSnapshot.get("validity")));
-                               }else {
-                                   rewardModelList.add(new RewardModel(
-                                           documentSnapshot.get("type").toString()
-                                           ,documentSnapshot.get("lower_limit").toString()
-                                           ,documentSnapshot.get("upper_limit").toString()
-                                           ,documentSnapshot.get("amount").toString()
-                                           ,documentSnapshot.get("body").toString()
-                                           ,(Timestamp)documentSnapshot.get("validity")));
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                       if (task.isSuccessful()){
+                           Timestamp timestamp=task.getResult().getTimestamp("Last_seen");
+                           Log.d(TAG, "onComplete: "+timestamp.toDate());
 
-                               }
 
-                            }
-                            MyRewardsFragment.myRewardAdapter.notifyDataSetChanged();
-                        }else {
-                            String error = task.getException().getMessage();
-                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                           FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USERS_REWARDS").get()
+                                   .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                       @Override
+                                       public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                           if(task.isSuccessful()){
+                                               for(QueryDocumentSnapshot documentSnapshot: task.getResult()){
+                                                   if(documentSnapshot.get("type").toString().equals("Discount")&& timestamp.toDate().before(documentSnapshot.getDate("validity"))){
+                                                       rewardModelList.add(new RewardModel(
+                                                               documentSnapshot.get("type").toString()
+                                                               ,documentSnapshot.get("lower_limit").toString()
+                                                               ,documentSnapshot.get("upper_limit").toString()
+                                                               ,documentSnapshot.get("percentage").toString()
+                                                               ,documentSnapshot.get("body").toString()
+                                                               ,(Timestamp)documentSnapshot.get("validity")));
+                                                   }else if(documentSnapshot.get("type").toString().equals("Flat Rs. *OFF")&& timestamp.toDate().before(documentSnapshot.getDate("validity"))){
+                                                       rewardModelList.add(new RewardModel(
+                                                               documentSnapshot.get("type").toString()
+                                                               ,documentSnapshot.get("lower_limit").toString()
+                                                               ,documentSnapshot.get("upper_limit").toString()
+                                                               ,documentSnapshot.get("amount").toString()
+                                                               ,documentSnapshot.get("body").toString()
+                                                               ,(Timestamp)documentSnapshot.get("validity")));
 
-                        }
+                                                   }
 
+                                               }
+                                               MyRewardsFragment.myRewardAdapter.notifyDataSetChanged();
+                                           }else {
+                                               String error = task.getException().getMessage();
+                                               Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+
+                                           }
+
+                                       }
+                                   });
+
+                       }else {
+                           String error = task.getException().getMessage();
+                           Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+
+                       }
                     }
                 });
+
     }
 
     public static void clearData(){
