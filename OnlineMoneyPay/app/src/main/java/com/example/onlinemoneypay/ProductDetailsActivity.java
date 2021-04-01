@@ -444,9 +444,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(ProductDetailsActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         coupensRecyclerView.setLayoutManager(layoutManager);
-
-
-        List<RewardModel> rewardModelList = new ArrayList<>();
+        //   List<RewardModel> rewardModelList = new ArrayList<>();
 //        rewardModelList.add(new RewardModel("Cash Back", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
 //        rewardModelList.add(new RewardModel("Cash Back", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
 //        rewardModelList.add(new RewardModel("Cash Back", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
@@ -458,7 +456,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 //        rewardModelList.add(new RewardModel("Discount", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
 
 
-        MyRewardAdapter myRewardAdapter = new MyRewardAdapter(rewardModelList, true);
+        MyRewardAdapter myRewardAdapter = new MyRewardAdapter(DBqueries.rewardModelList, true);
         coupensRecyclerView.setAdapter(myRewardAdapter);
         myRewardAdapter.notifyDataSetChanged();
 
@@ -579,6 +577,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 }
             });
             DBqueries.loadRatingList(ProductDetailsActivity.this, product_ID);
+            DBqueries.loadReward(ProductDetailsActivity.this,false);
 
 
         }

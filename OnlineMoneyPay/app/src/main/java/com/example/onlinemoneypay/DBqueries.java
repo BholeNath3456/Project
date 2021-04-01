@@ -40,7 +40,7 @@ public class DBqueries {
     public static List<Long> myRating = new ArrayList<>();
     public static int selectedAddress = -1;
     public static List<AddressesModel> addressesModelList = new ArrayList<>();
-    public static List<RewardModel> rewardModelList =new ArrayList<>();
+    public static List<RewardModel> rewardModelList = new ArrayList<>();
 
     public static void loadCategories(RecyclerView categoryRecyclerView, Context context) {
 
@@ -286,7 +286,7 @@ public class DBqueries {
                     Intent deliveryIntent;
                     if (listSize == 0) {
                         deliveryIntent = new Intent(context, AddAddressActivity.class);
-                        deliveryIntent.putExtra("INTENT","deliveryIntent");
+                        deliveryIntent.putExtra("INTENT", "deliveryIntent");
                     } else {
 
                         for (long x = 1; x < listSize + 1; x++) {
@@ -312,64 +312,66 @@ public class DBqueries {
         });
     }
 
-    public static void loadReward(Context context){
+    public static void loadReward(Context context,boolean onRewardFargment) {
         rewardModelList.clear();
         FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                       if (task.isSuccessful()){
-                           Timestamp timestamp=task.getResult().getTimestamp("Last_seen");
-                           Log.d(TAG, "onComplete: "+timestamp.toDate());
+                        if (task.isSuccessful()) {
+                            Timestamp timestamp = task.getResult().getTimestamp("Last_seen");
+                            Log.d(TAG, "onComplete: " + timestamp.toDate());
 
 
-                           FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USERS_REWARDS").get()
-                                   .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                       @Override
-                                       public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                           if(task.isSuccessful()){
-                                               for(QueryDocumentSnapshot documentSnapshot: task.getResult()){
-                                                   if(documentSnapshot.get("type").toString().equals("Discount")&& timestamp.toDate().before(documentSnapshot.getDate("validity"))){
-                                                       rewardModelList.add(new RewardModel(
-                                                               documentSnapshot.get("type").toString()
-                                                               ,documentSnapshot.get("lower_limit").toString()
-                                                               ,documentSnapshot.get("upper_limit").toString()
-                                                               ,documentSnapshot.get("percentage").toString()
-                                                               ,documentSnapshot.get("body").toString()
-                                                               ,(Timestamp)documentSnapshot.get("validity")));
-                                                   }else if(documentSnapshot.get("type").toString().equals("Flat Rs. *OFF")&& timestamp.toDate().before(documentSnapshot.getDate("validity"))){
-                                                       rewardModelList.add(new RewardModel(
-                                                               documentSnapshot.get("type").toString()
-                                                               ,documentSnapshot.get("lower_limit").toString()
-                                                               ,documentSnapshot.get("upper_limit").toString()
-                                                               ,documentSnapshot.get("amount").toString()
-                                                               ,documentSnapshot.get("body").toString()
-                                                               ,(Timestamp)documentSnapshot.get("validity")));
+                            FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USERS_REWARDS").get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                                    if (documentSnapshot.get("type").toString().equals("Discount") && timestamp.toDate().before(documentSnapshot.getDate("validity"))) {
+                                                        rewardModelList.add(new RewardModel(
+                                                                documentSnapshot.get("type").toString()
+                                                                , documentSnapshot.get("lower_limit").toString()
+                                                                , documentSnapshot.get("upper_limit").toString()
+                                                                , documentSnapshot.get("percentage").toString()
+                                                                , documentSnapshot.get("body").toString()
+                                                                , (Timestamp) documentSnapshot.get("validity")));
+                                                    } else if (documentSnapshot.get("type").toString().equals("Flat Rs. *OFF") && timestamp.toDate().before(documentSnapshot.getDate("validity"))) {
+                                                        rewardModelList.add(new RewardModel(
+                                                                documentSnapshot.get("type").toString()
+                                                                , documentSnapshot.get("lower_limit").toString()
+                                                                , documentSnapshot.get("upper_limit").toString()
+                                                                , documentSnapshot.get("amount").toString()
+                                                                , documentSnapshot.get("body").toString()
+                                                                , (Timestamp) documentSnapshot.get("validity")));
 
-                                                   }
+                                                    }
 
-                                               }
-                                               MyRewardsFragment.myRewardAdapter.notifyDataSetChanged();
-                                           }else {
-                                               String error = task.getException().getMessage();
-                                               Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                                                }
+                                                if (onRewardFargment) {
+                                                    MyRewardsFragment.myRewardAdapter.notifyDataSetChanged();
+                                                }
+                                            } else {
+                                                String error = task.getException().getMessage();
+                                                Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
 
-                                           }
+                                            }
 
-                                       }
-                                   });
+                                        }
+                                    });
 
-                       }else {
-                           String error = task.getException().getMessage();
-                           Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                        } else {
+                            String error = task.getException().getMessage();
+                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
 
-                       }
+                        }
                     }
                 });
 
     }
 
-    public static void clearData(){
+    public static void clearData() {
         categoryModelList.clear();
         lists.clear();
         loadedCategoriesNames.clear();

@@ -76,7 +76,7 @@ public class MyRewardsFragment extends Fragment {
         rewardsRecyclerView.setAdapter(myRewardAdapter);
 
         if(DBqueries.rewardModelList.size()==0){
-            DBqueries.loadReward(getContext());
+            DBqueries.loadReward(getContext(),true);
         }
         myRewardAdapter.notifyDataSetChanged();
 
