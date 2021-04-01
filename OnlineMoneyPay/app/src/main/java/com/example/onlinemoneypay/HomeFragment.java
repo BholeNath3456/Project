@@ -227,6 +227,7 @@ public class HomeFragment extends Fragment {
         categoryModelList.clear();
         lists.clear();
         loadedCategoriesNames.clear();
+        DBqueries.clearData();
 
 
         if (networkInfo != null && networkInfo.isConnected() == true) {

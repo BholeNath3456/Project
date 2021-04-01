@@ -70,7 +70,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private String productDescription;
     private String productOtherDetails;
     // public static int tabPosition = -1;
-    private List<ProductSpecificationModel> productSpecificationModelList = new ArrayList<>();
+    public static List<ProductSpecificationModel> productSpecificationModelList = new ArrayList<>();
     // product description
 
     private LinearLayout coupenRedemptionLayout;
@@ -447,15 +447,15 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
 
         List<RewardModel> rewardModelList = new ArrayList<>();
-        rewardModelList.add(new RewardModel("Cash Back", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
-        rewardModelList.add(new RewardModel("Cash Back", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
-        rewardModelList.add(new RewardModel("Cash Back", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
-        rewardModelList.add(new RewardModel("Discount", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
-        rewardModelList.add(new RewardModel("Buy 1 get 1 free", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
-        rewardModelList.add(new RewardModel("Cash Back", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
-        rewardModelList.add(new RewardModel("Discount on coupen", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
-        rewardModelList.add(new RewardModel("Cash Back", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
-        rewardModelList.add(new RewardModel("Discount", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
+//        rewardModelList.add(new RewardModel("Cash Back", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
+//        rewardModelList.add(new RewardModel("Cash Back", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
+//        rewardModelList.add(new RewardModel("Cash Back", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
+//        rewardModelList.add(new RewardModel("Discount", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
+//        rewardModelList.add(new RewardModel("Buy 1 get 1 free", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
+//        rewardModelList.add(new RewardModel("Cash Back", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
+//        rewardModelList.add(new RewardModel("Discount on coupen", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
+//        rewardModelList.add(new RewardModel("Cash Back", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
+//        rewardModelList.add(new RewardModel("Discount", "Till 2nd,June 2021", "GET 20% CASHBACK on any product above Rs. 200/- and below Rs. 3000/-"));
 
 
         MyRewardAdapter myRewardAdapter = new MyRewardAdapter(rewardModelList, true);

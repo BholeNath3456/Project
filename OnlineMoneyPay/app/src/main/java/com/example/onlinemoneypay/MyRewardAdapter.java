@@ -8,6 +8,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class MyRewardAdapter extends RecyclerView.Adapter<MyRewardAdapter.Viewholder> {
@@ -36,10 +38,13 @@ public class MyRewardAdapter extends RecyclerView.Adapter<MyRewardAdapter.Viewho
 
     @Override
     public void onBindViewHolder(@NonNull Viewholder viewholder, int position) {
-        String title = rewardModelList.get(position).getTitle();
-        String date = rewardModelList.get(position).getExpiryDate();
+        String type = rewardModelList.get(position).getType();
+        Date validity = rewardModelList.get(position).getTimestamp().toDate();
         String body = rewardModelList.get(position).getCoupenBody();
-        viewholder.setData(title,date,body);
+        String lowerLimit=rewardModelList.get(position).getLowerLimit();
+        String upperLimit=rewardModelList.get(position).getUpperLimit();
+        String discOramt=rewardModelList.get(position).getDiscOramt();
+        viewholder.setData(type,validity,body,upperLimit,lowerLimit,discOramt);
 
     }
 
@@ -61,17 +66,23 @@ public class MyRewardAdapter extends RecyclerView.Adapter<MyRewardAdapter.Viewho
 
         }
 
-        private void setData(String title, String date, String body) {
-            coupenTitle.setText(title);
-            coupenExpiryDate.setText(date);
-            coupenBody.setText(body);
+        private void setData(String type, Date validity, String body,String upperLimit, String lowerLimit, String discOramt) {
+            if(type.equals("Discount")){
+                coupenTitle.setText(type);
+            }
+            else {
+                coupenTitle.setText("FLat Rs."+discOramt+"Off");
+            }
 
+            SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd/MMMM/YYYY");
+            coupenExpiryDate.setText(simpleDateFormat.format(validity));
+            coupenBody.setText(body);
             if(useMiniLayout){
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ProductDetailsActivity.coupenTitle.setText(title);
-                        ProductDetailsActivity.coupenExpiryDate.setText(date);
+                        ProductDetailsActivity.coupenTitle.setText(type);
+                        ProductDetailsActivity.coupenExpiryDate.setText(simpleDateFormat.format(validity));
                         ProductDetailsActivity.coupenBody.setText(body);
                         ProductDetailsActivity.showDialogRecyclerView();
                     }

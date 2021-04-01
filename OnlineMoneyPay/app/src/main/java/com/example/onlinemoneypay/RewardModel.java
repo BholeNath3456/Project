@@ -1,30 +1,56 @@
 package com.example.onlinemoneypay;
 
+import com.google.firebase.Timestamp;
+
+import java.util.Date;
+
 public class RewardModel {
-private String title;
-private String expiryDate;
+private String type;
+private String lowerLimit;
+private String upperLimit;
+private String discOramt;
 private String coupenBody;
+private Timestamp timestamp;
 
-    public RewardModel(String title, String expiryDate, String coupenBody) {
-        this.title = title;
-        this.expiryDate = expiryDate;
+    public RewardModel(String type, String lowerLimit, String upperLimit, String discOramt, String coupenBody, Timestamp timestamp) {
+        this.type = type;
+        this.lowerLimit = lowerLimit;
+        this.upperLimit = upperLimit;
+        this.discOramt = discOramt;
         this.coupenBody = coupenBody;
+        this.timestamp = timestamp;
     }
 
-    public String getTitle() {
-        return title;
+    public String getType() {
+        return type;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getExpiryDate() {
-        return expiryDate;
+    public String getLowerLimit() {
+        return lowerLimit;
     }
 
-    public void setExpiryDate(String expiryDate) {
-        this.expiryDate = expiryDate;
+    public void setLowerLimit(String lowerLimit) {
+        this.lowerLimit = lowerLimit;
+    }
+
+    public String getUpperLimit() {
+        return upperLimit;
+    }
+
+    public void setUpperLimit(String upperLimit) {
+        this.upperLimit = upperLimit;
+    }
+
+    public String getDiscOramt() {
+        return discOramt;
+    }
+
+    public void setDiscOramt(String discOramt) {
+        this.discOramt = discOramt;
     }
 
     public String getCoupenBody() {
@@ -33,5 +59,13 @@ private String coupenBody;
 
     public void setCoupenBody(String coupenBody) {
         this.coupenBody = coupenBody;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
     }
 }

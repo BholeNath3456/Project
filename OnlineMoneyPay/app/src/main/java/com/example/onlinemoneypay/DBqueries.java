@@ -12,6 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -22,6 +23,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +40,7 @@ public class DBqueries {
     public static List<Long> myRating = new ArrayList<>();
     public static int selectedAddress = -1;
     public static List<AddressesModel> addressesModelList = new ArrayList<>();
-
+    public static List<RewardModel> rewardModelList =new ArrayList<>();
 
     public static void loadCategories(RecyclerView categoryRecyclerView, Context context) {
 
@@ -308,6 +310,60 @@ public class DBqueries {
                 }
             }
         });
+    }
+
+    public static void loadReward(Context context){
+        rewardModelList.clear();
+        FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USERS_REWARDS").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot documentSnapshot: task.getResult()){
+                               if(documentSnapshot.get("type").toString().equals("Discount")){
+                                   rewardModelList.add(new RewardModel(
+                                            documentSnapshot.get("type").toString()
+                                           ,documentSnapshot.get("lower_limit").toString()
+                                           ,documentSnapshot.get("upper_limit").toString()
+                                           ,documentSnapshot.get("percentage").toString()
+                                           ,documentSnapshot.get("body").toString()
+                                           ,(Timestamp)documentSnapshot.get("validity")));
+                               }else {
+                                   rewardModelList.add(new RewardModel(
+                                           documentSnapshot.get("type").toString()
+                                           ,documentSnapshot.get("lower_limit").toString()
+                                           ,documentSnapshot.get("upper_limit").toString()
+                                           ,documentSnapshot.get("amount").toString()
+                                           ,documentSnapshot.get("body").toString()
+                                           ,(Timestamp)documentSnapshot.get("validity")));
+
+                               }
+
+                            }
+                            MyRewardsFragment.myRewardAdapter.notifyDataSetChanged();
+                        }else {
+                            String error = task.getException().getMessage();
+                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    }
+                });
+    }
+
+    public static void clearData(){
+        categoryModelList.clear();
+        lists.clear();
+        loadedCategoriesNames.clear();
+        idList.clear();
+        myRatedIds.clear();
+        myRating.clear();
+        addressesModelList.clear();
+        rewardModelList.clear();
+        ProductDetailsActivity.productSpecificationModelList.clear();
+        MyWishlistFragment.wishlistModelList.clear();
+        MyCartFragment.cartItemModelsList.clear();
+
     }
 
 }
