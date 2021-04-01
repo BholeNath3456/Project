@@ -15,10 +15,16 @@ import java.util.List;
 public class MyRewardAdapter extends RecyclerView.Adapter<MyRewardAdapter.Viewholder> {
     private List<RewardModel> rewardModelList;
     private Boolean useMiniLayout=false;
+    private String   forCalculationOriginalPrice;
 
     public MyRewardAdapter(List<RewardModel> rewardModelList,Boolean useMiniLayout) {
         this.rewardModelList = rewardModelList;
         this.useMiniLayout=useMiniLayout;
+    }
+    public MyRewardAdapter(List<RewardModel> rewardModelList,Boolean useMiniLayout,String   forCalculationOriginalPrice) {
+        this.rewardModelList = rewardModelList;
+        this.useMiniLayout=useMiniLayout;
+        this.forCalculationOriginalPrice=  forCalculationOriginalPrice;
     }
 
     @NonNull
@@ -81,10 +87,11 @@ public class MyRewardAdapter extends RecyclerView.Adapter<MyRewardAdapter.Viewho
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
                         ProductDetailsActivity.coupenTitle.setText(type);
                         ProductDetailsActivity.coupenExpiryDate.setText(simpleDateFormat.format(validity));
                         ProductDetailsActivity.coupenBody.setText(body);
-                        ProductDetailsActivity.originalPrice.setText("Original");
+                        ProductDetailsActivity.originalPrice.setText(forCalculationOriginalPrice);
                         ProductDetailsActivity.discountedPrice.setText("Discount price");
                         ProductDetailsActivity.showDialogRecyclerView();
                     }

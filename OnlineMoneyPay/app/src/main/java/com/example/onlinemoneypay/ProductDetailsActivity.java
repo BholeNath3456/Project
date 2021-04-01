@@ -95,6 +95,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private Button applyBtn;
     public static TextView originalPrice;
     public static TextView discountedPrice;
+
     ////coupendialog
 
     private Dialog signInDialog;
@@ -169,6 +170,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     averageRatingMiniView.setText(documentSnapshot.get("average_rating").toString());
                     totalRatingMiniView.setText("(" + (long) documentSnapshot.get("total_ratings") + ")ratings");
                     productPrice.setText("Rs." + documentSnapshot.get("product_price").toString() + "/-");
+
                     cuttedPrice.setText("Rs." + documentSnapshot.get("cutted_price").toString() + "/-");
                     if ((boolean) documentSnapshot.get("COD")) {
                         codIndicator.setVisibility(View.VISIBLE);
@@ -429,8 +431,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         /////// coupen  diaglog....
 
-
-        MyRewardAdapter myRewardAdapter = new MyRewardAdapter(DBqueries.rewardModelList, true);
+        //forCalculationOriginalPrice=productPrice.getText().toString();
+        MyRewardAdapter myRewardAdapter = new MyRewardAdapter(DBqueries.rewardModelList, true, productPrice.getText().toString());
 
 
         Dialog checkCoupenPriceDialog = new Dialog(ProductDetailsActivity.this);
@@ -465,7 +467,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
         applyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ProductDetailsActivity.this, "Coupen Applied", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onClick: apply press"+productPrice.getText().toString());
+                Toast.makeText(ProductDetailsActivity.this,productPrice.getText().toString() , Toast.LENGTH_SHORT).show();
             }
         });
         /////// coupen  diaglog....
