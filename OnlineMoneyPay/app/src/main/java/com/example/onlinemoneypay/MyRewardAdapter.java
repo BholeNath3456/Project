@@ -84,6 +84,8 @@ public class MyRewardAdapter extends RecyclerView.Adapter<MyRewardAdapter.Viewho
                         ProductDetailsActivity.coupenTitle.setText(type);
                         ProductDetailsActivity.coupenExpiryDate.setText(simpleDateFormat.format(validity));
                         ProductDetailsActivity.coupenBody.setText(body);
+                        ProductDetailsActivity.originalPrice.setText("Original");
+                        ProductDetailsActivity.discountedPrice.setText("Discount price");
                         ProductDetailsActivity.showDialogRecyclerView();
                     }
                 });
