@@ -312,7 +312,7 @@ public class DBqueries {
         });
     }
 
-    public static void loadReward(Context context,boolean onRewardFargment) {
+    public static void loadReward(Context context, boolean onRewardFargment) {
         rewardModelList.clear();
         FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -329,22 +329,24 @@ public class DBqueries {
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                             if (task.isSuccessful()) {
                                                 for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                                    if (documentSnapshot.get("type").toString().equals("Discount") && timestamp.toDate().before(documentSnapshot.getDate("validity"))) {
+                                                    if ((!(boolean) documentSnapshot.get("is_applied")) && documentSnapshot.get("type").toString().equals("Discount") && timestamp.toDate().before(documentSnapshot.getDate("validity"))) {
                                                         rewardModelList.add(new RewardModel(
                                                                 documentSnapshot.get("type").toString()
                                                                 , documentSnapshot.get("lower_limit").toString()
                                                                 , documentSnapshot.get("upper_limit").toString()
                                                                 , documentSnapshot.get("percentage").toString()
                                                                 , documentSnapshot.get("body").toString()
-                                                                , (Timestamp) documentSnapshot.get("validity")));
-                                                    } else if (documentSnapshot.get("type").toString().equals("Flat Rs. *OFF") && timestamp.toDate().before(documentSnapshot.getDate("validity"))) {
+                                                                , (Timestamp) documentSnapshot.get("validity")
+                                                                , documentSnapshot.get("rewardID").toString()));
+                                                    } else if ((!(boolean) documentSnapshot.get("is_applied")) && documentSnapshot.get("type").toString().equals("Flat Rs. *OFF") && timestamp.toDate().before(documentSnapshot.getDate("validity"))) {
                                                         rewardModelList.add(new RewardModel(
                                                                 documentSnapshot.get("type").toString()
                                                                 , documentSnapshot.get("lower_limit").toString()
                                                                 , documentSnapshot.get("upper_limit").toString()
                                                                 , documentSnapshot.get("amount").toString()
                                                                 , documentSnapshot.get("body").toString()
-                                                                , (Timestamp) documentSnapshot.get("validity")));
+                                                                , (Timestamp) documentSnapshot.get("validity")
+                                                                , documentSnapshot.get("rewardID").toString()));
 
                                                     }
 
@@ -369,6 +371,10 @@ public class DBqueries {
                     }
                 });
 
+    }
+
+    public static void removeReward() {
+        FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USERS_REWARDS").document("removethis").delete();
     }
 
     public static void clearData() {

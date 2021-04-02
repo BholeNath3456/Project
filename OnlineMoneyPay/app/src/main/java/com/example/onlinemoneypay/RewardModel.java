@@ -11,14 +11,16 @@ private String upperLimit;
 private String discOramt;
 private String coupenBody;
 private Timestamp timestamp;
+private  String rewardID;
 
-    public RewardModel(String type, String lowerLimit, String upperLimit, String discOramt, String coupenBody, Timestamp timestamp) {
+    public RewardModel(String type, String lowerLimit, String upperLimit, String discOramt, String coupenBody, Timestamp timestamp, String rewardID) {
         this.type = type;
         this.lowerLimit = lowerLimit;
         this.upperLimit = upperLimit;
         this.discOramt = discOramt;
         this.coupenBody = coupenBody;
         this.timestamp = timestamp;
+        this.rewardID = rewardID;
     }
 
     public String getType() {
@@ -67,5 +69,13 @@ private Timestamp timestamp;
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getRewardID() {
+        return rewardID;
+    }
+
+    public void setRewardID(String rewardID) {
+        this.rewardID = rewardID;
     }
 }

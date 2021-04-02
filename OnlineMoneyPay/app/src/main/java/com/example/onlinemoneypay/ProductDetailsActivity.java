@@ -93,6 +93,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private static RecyclerView coupensRecyclerView;
     private static LinearLayout selectedCoupen;
     private Button applyBtn;
+    public static String selectedRewardId;
     public static TextView originalPrice;
     public static TextView discountedPrice;
     public static String   forCalculationOriginalPrice;
@@ -468,8 +469,11 @@ public class ProductDetailsActivity extends AppCompatActivity {
         applyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ProductDetailsActivity.this, "Congratulation coupen Applied!", Toast.LENGTH_SHORT).show();
-                 }
+                Log.d(TAG, "onClick: "+selectedRewardId);
+                Toast.makeText(ProductDetailsActivity.this, selectedRewardId, Toast.LENGTH_SHORT).show();
+//                DBqueries.rewardModelList.contains()
+//                FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USERS_REWARDS").document("removethis").delete();
+            }
         });
         /////// coupen  diaglog....
 
