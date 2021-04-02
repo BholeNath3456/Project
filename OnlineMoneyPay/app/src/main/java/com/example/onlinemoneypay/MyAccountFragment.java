@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -28,6 +29,7 @@ public class MyAccountFragment extends Fragment {
     private CircleImageView profileView;
     private TextView name,email;
     private Button signOutBtn;
+    private FloatingActionButton settingsBtn;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -75,6 +77,7 @@ public class MyAccountFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_my_account, container, false);
         profileView=view.findViewById(R.id.profile_image);
+        settingsBtn=view.findViewById(R.id.settings_btn);
         name=view.findViewById(R.id.username);
         email=view.findViewById(R.id.user_email);
         signOutBtn=view.findViewById(R.id.sign_out_btn);
@@ -100,6 +103,16 @@ public class MyAccountFragment extends Fragment {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(getContext(),RegisterActivity.class));
                 getActivity().finish();
+            }
+        });
+        settingsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent updateUserInfo=new Intent(getContext(),UpdateUserInfoActivity.class);
+                updateUserInfo.putExtra("Name",name.getText());
+                updateUserInfo.putExtra("Email",email.getText());
+                updateUserInfo.putExtra("Photo",DBqueries.profile);
+                startActivity(updateUserInfo);
             }
         });
 

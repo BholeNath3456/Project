@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".UpdateInfoFragment">
 
@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="18dp"
         android:background="@android:color/transparent"
         android:text="Change Photo"
         android:textAllCaps="false"
@@ -52,7 +52,8 @@
         android:layout_marginBottom="8dp">
 
         <EditText
-            android:id="@+id/old_password"
+            android:background="@color/white"
+            android:id="@+id/update_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter your name"
@@ -68,7 +69,8 @@
         android:layout_marginBottom="8dp">
 
         <EditText
-            android:id="@+id/new_password"
+            android:background="@color/white"
+            android:id="@+id/update_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter your E-mail Address"
@@ -79,8 +81,10 @@
 
     <Button
         android:id="@+id/update_password_btn"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
         android:text="Update"
         android:textSize="16sp" />
 
