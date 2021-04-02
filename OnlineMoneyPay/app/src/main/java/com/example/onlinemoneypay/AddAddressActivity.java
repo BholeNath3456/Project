@@ -4,11 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -53,7 +50,7 @@ public class AddAddressActivity extends AppCompatActivity {
         editTextState = findViewById(R.id.state);
         editTextPincode = findViewById(R.id.pincode);
         editTextLandmark = findViewById(R.id.landmark);
-        editTextName = findViewById(R.id.name);
+        editTextName = findViewById(R.id.old_password);
         editTextMobileNo = findViewById(R.id.mobile_no);
         editTextAlternateMobileNo = findViewById(R.id.alternate_mobile_no);
 
