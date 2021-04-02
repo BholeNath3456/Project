@@ -68,6 +68,10 @@ public class UpdateUserInfoActivity extends AppCompatActivity {
             bundle.putString("Email", email);
             bundle.putString("Photo", photo);
             fragment.setArguments(bundle);
+        }else {
+            Bundle bundle = new Bundle();
+            bundle.putString("Email", email);
+            fragment.setArguments(bundle);
         }
         fragmentTransaction.replace(frameLayout.getId(), fragment);
         fragmentTransaction.commit();

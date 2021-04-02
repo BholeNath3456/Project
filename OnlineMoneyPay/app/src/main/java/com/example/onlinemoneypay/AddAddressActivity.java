@@ -50,7 +50,7 @@ public class AddAddressActivity extends AppCompatActivity {
         editTextState = findViewById(R.id.state);
         editTextPincode = findViewById(R.id.pincode);
         editTextLandmark = findViewById(R.id.landmark);
-        editTextName = findViewById(R.id.update_name);
+        editTextName = findViewById(R.id.old_password);
         editTextMobileNo = findViewById(R.id.mobile_no);
         editTextAlternateMobileNo = findViewById(R.id.alternate_mobile_no);
 

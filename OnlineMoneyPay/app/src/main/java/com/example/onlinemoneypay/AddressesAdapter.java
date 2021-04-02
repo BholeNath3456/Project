@@ -62,7 +62,7 @@ public class AddressesAdapter extends RecyclerView.Adapter<AddressesAdapter.View
         public Viewholder(@NonNull View itemView) {
             super(itemView);
 
-            fullname = itemView.findViewById(R.id.update_name);
+            fullname = itemView.findViewById(R.id.old_password);
             address = itemView.findViewById(R.id.address);
             pincode = itemView.findViewById(R.id.pincode);
             icon = itemView.findViewById(R.id.icon_view);
