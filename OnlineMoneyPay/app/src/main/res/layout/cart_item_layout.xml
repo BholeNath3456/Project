@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/white"
-    android:elevation="5dp"
+    android:layout_height="match_parent"
     android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp"
-    android:layout_height="wrap_content">
+    android:background="@color/white"
+    android:elevation="5dp">
 
     <ImageView
         android:id="@+id/product_image"
@@ -53,6 +53,7 @@
         android:text="Free 2 Coupen"
         android:textColor="#8000FF"
         android:textSize="12sp"
+        android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/free_coupen_icon"
         app:layout_constraintTop_toBottomOf="@+id/product_title" />
 
@@ -94,8 +95,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:text="Offers Applied"
-        android:textSize="12sp"
         android:textColor="@color/success_green"
+        android:textSize="12sp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/product_price" />
 
@@ -108,6 +110,7 @@
         android:textColor="@color/red"
         android:textSize="12sp"
 
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/offers_applied" />
 
@@ -178,11 +181,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Remove Item"
-            android:gravity="center"
-            android:drawablePadding="5dp"
             android:drawableStart="@drawable/bin"
-            />
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="Remove Item" />
 
 
     </LinearLayout>

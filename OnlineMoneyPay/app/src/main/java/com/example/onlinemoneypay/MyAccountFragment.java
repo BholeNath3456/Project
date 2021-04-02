@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.auth.FirebaseAuth;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -26,6 +27,7 @@ public class MyAccountFragment extends Fragment {
     private Button viewAllAddressBtn;
     private CircleImageView profileView;
     private TextView name,email;
+    private Button signOutBtn;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -75,8 +77,10 @@ public class MyAccountFragment extends Fragment {
         profileView=view.findViewById(R.id.profile_image);
         name=view.findViewById(R.id.username);
         email=view.findViewById(R.id.user_email);
+        signOutBtn=view.findViewById(R.id.sign_out_btn);
         name.setText(DBqueries.name);
         email.setText(DBqueries.email);
+
         if (!DBqueries.profile.isEmpty()) {
             Glide.with(getContext()).load(DBqueries.profile).apply(new RequestOptions().placeholder(R.drawable.profile_placeholder)).into(profileView);
 
@@ -88,6 +92,14 @@ public class MyAccountFragment extends Fragment {
                 Intent myAddressesIntent=new Intent(getContext(), MyAddressesActivity.class);
                 myAddressesIntent.putExtra("MODE",MANAGE_ADDRESS);
                 startActivity(myAddressesIntent);
+            }
+        });
+        signOutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getContext(),RegisterActivity.class));
+                getActivity().finish();
             }
         });
 

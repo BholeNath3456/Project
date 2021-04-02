@@ -14,8 +14,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
             <include layout="@layout/profile_data_layout"/>
-            <include layout="@layout/order_status_layout"/>
-            <include layout="@layout/your_recent_orders_layout"/>
+
+            <include
+                layout="@layout/order_status_layout"
+                android:visibility="gone" />
+
+            <include
+                layout="@layout/your_recent_orders_layout"
+                android:visibility="gone" />
             <include layout="@layout/my_addresses_layout"/>
 
             <Button
