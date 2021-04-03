@@ -2,6 +2,7 @@ package com.example.onlinemoneypay;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +19,7 @@ public class FillCardDetailsActivity extends AppCompatActivity {
   public static String orderId;
   public static String transactionId;
   private Button payNow;
-  private List<String> orderProductID;
+  public static List<String> orderProductID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +42,9 @@ public class FillCardDetailsActivity extends AppCompatActivity {
         payNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent=new Intent(FillCardDetailsActivity.this,FinishedOrderedActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
