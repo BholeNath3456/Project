@@ -44,6 +44,7 @@ public class SearchActivity extends AppCompatActivity {
         final List<WishlistModel> list = new ArrayList<>();
         final List<String> ids = new ArrayList<>();
         Adapter adapter = new Adapter(list, false);
+        adapter.setFromSearch(true);
         recyclerView.setAdapter(adapter);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -51,7 +52,7 @@ public class SearchActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String s) {
                 list.clear();
                 ids.clear();
-                String[] tags = s.toLowerCase().split(" ");
+                final String[] tags = s.toLowerCase().split(" ");
                 for (String tag : tags) {
                     tag.trim();
                     FirebaseFirestore.getInstance().collection("PRODUCTS").whereArrayContains("tags", tag)
@@ -69,6 +70,7 @@ public class SearchActivity extends AppCompatActivity {
                                             , documentSnapshot.get("product_price").toString()
                                             , documentSnapshot.get("cutted_price").toString()
                                             , (boolean) documentSnapshot.get("COD"));
+                                    model.setTags((ArrayList<String>) documentSnapshot.get("tags"));
                                     if (!ids.contains(model.getProductID())) {
                                         list.add(model);
                                         ids.add(model.getProductID());
@@ -102,9 +104,11 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     class Adapter extends WishlistAdapter implements Filterable {
+        private List<WishlistModel> originalList;
 
         public Adapter(List<WishlistModel> wishlistModelList, Boolean wishlist) {
             super(wishlistModelList, wishlist);
+            originalList = wishlistModelList;
         }
 
         @Override
@@ -113,12 +117,37 @@ public class SearchActivity extends AppCompatActivity {
                 @Override
                 protected FilterResults performFiltering(CharSequence constraint) {
                     /// filter logic...
+                    FilterResults results = new FilterResults();
+                    List<WishlistModel> filteredList = new ArrayList<>();
+                    final String[] tags = constraint.toString().toLowerCase().split(" ");
+                    for (WishlistModel model : originalList) {
+                        ArrayList<String> presentTags = new ArrayList<>();
+                        for (String tag : tags) {
+                            if (model.getTags().contains(tag)) {
+                                presentTags.add(tag);
+                            }
+                        }
+                        model.setTags(presentTags);
+                    }
+                    for (int i = tags.length; i > 0; i--) {
+                        for (WishlistModel model : originalList) {
+                            if (model.getTags().size() == i) {
+                                filteredList.add(model);
+                            }
+                        }
+                    }
 
-                    return null;
+
+                    results.values=filteredList;
+                    results.count=filteredList.size();
+                    return results;
                 }
 
                 @Override
                 protected void publishResults(CharSequence constraint, FilterResults results) {
+                 if(results.count>0){
+                     setWishlistModelList((List<WishlistModel>) results.values);
+                 }
                     notifyDataSetChanged();
                 }
             };

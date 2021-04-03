@@ -1,5 +1,7 @@
 package com.example.onlinemoneypay;
 
+import java.util.ArrayList;
+
 public class WishlistModel {
     public WishlistModel() {
     }
@@ -12,6 +14,7 @@ public class WishlistModel {
     private String productPrice;
     private String cuttedPrice;
     private boolean COD;
+    private ArrayList<String> tags;
 
     public WishlistModel(String productID, String productImage, String productTitle, long freeCoupens, String rating, long totalRating, String productPrice, String cuttedPrice, boolean COD) {
         this.productID = productID;
@@ -23,6 +26,14 @@ public class WishlistModel {
         this.productPrice = productPrice;
         this.cuttedPrice = cuttedPrice;
         this.COD = COD;
+    }
+
+    public ArrayList<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(ArrayList<String> tags) {
+        this.tags = tags;
     }
 
     public String getProductID() {

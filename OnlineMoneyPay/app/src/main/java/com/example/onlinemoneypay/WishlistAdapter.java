@@ -33,6 +33,14 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.ViewHo
         this.fromSearch = fromSearch;
     }
 
+    public List<WishlistModel> getWishlistModelList() {
+        return wishlistModelList;
+    }
+
+    public void setWishlistModelList(List<WishlistModel> wishlistModelList) {
+        this.wishlistModelList = wishlistModelList;
+    }
+
     public WishlistAdapter(List<WishlistModel> wishlistModelList, Boolean wishlist) {
         this.wishlistModelList = wishlistModelList;
         this.wishlist=wishlist;
