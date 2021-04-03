@@ -111,7 +111,7 @@ public class UpdateInfoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_update_info, container, false);
         circleImageView = view.findViewById(R.id.profile_image);
-//        changePhotoBtn = view.findViewById(R.id.change_photo_btn);
+
         getChangePhotoBtn = view.findViewById(R.id.change_photo_btn);
         removeBtn = view.findViewById(R.id.remove_photo_btn);
         nameField = view.findViewById(R.id.old_password);
