@@ -27,7 +27,7 @@ public class DeliveryActivity extends AppCompatActivity {
     private Button continueBtn;
     private TextView fullname, fullAddress, pincode;
     public static final int SELECT_ADDRESS = 0;
-    private  int  totalItemPrice=0;
+    public static int  totalItemPrice=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,10 +80,13 @@ public class DeliveryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: Pressed..."+totalItemPrice);
+                Intent fillCardDetailsIntent=new Intent(DeliveryActivity.this,FillCardDetailsActivity.class);
+                startActivity(fillCardDetailsIntent);
 
 
             }
         });
+
       }
 
     private void gettingAmount() {

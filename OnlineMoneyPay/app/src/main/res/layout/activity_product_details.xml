@@ -82,7 +82,7 @@
                 android:gravity="center"
                 android:text="Add to Cart"
                 android:textColor="#485f70"
-                android:textSize="16sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -95,7 +95,8 @@
             android:backgroundTint="@color/link_blue"
             android:text="Buy Now"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:visibility="gone" />
 
     </LinearLayout>
 

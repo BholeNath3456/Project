@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.OnlineMoneyPay">
-        <activity android:name=".NotificationActivity"></activity>
+        <activity android:name=".FillCardDetailsActivity"></activity>
+        <activity android:name=".NotificationActivity" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".UpdateUserInfoActivity" />
         <activity android:name=".ViewAllActivity" />
