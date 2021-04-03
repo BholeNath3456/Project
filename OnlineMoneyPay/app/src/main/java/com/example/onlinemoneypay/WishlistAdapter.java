@@ -23,7 +23,17 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.ViewHo
     private List<WishlistModel> wishlistModelList;
     private Boolean wishlist;
      private int lastPosition=-1;
-    public WishlistAdapter(List<WishlistModel> wishlistModelList,Boolean wishlist) {
+     private boolean fromSearch;
+
+    public boolean isFromSearch() {
+        return fromSearch;
+    }
+
+    public void setFromSearch(boolean fromSearch) {
+        this.fromSearch = fromSearch;
+    }
+
+    public WishlistAdapter(List<WishlistModel> wishlistModelList, Boolean wishlist) {
         this.wishlistModelList = wishlistModelList;
         this.wishlist=wishlist;
     }
@@ -136,6 +146,9 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.ViewHo
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(fromSearch){
+                        ProductDetailsActivity.fromSearch=true;
+                    }
                     Intent productDetails=new Intent(itemView.getContext(),ProductDetailsActivity.class);
                     productDetails.putExtra("PRODUCT_ID",productid);
                     itemView.getContext().startActivity(productDetails);

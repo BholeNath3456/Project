@@ -47,6 +47,7 @@ import static com.example.onlinemoneypay.RegisterActivity.setSignUpFragment;
 public class ProductDetailsActivity extends AppCompatActivity {
     private static final String TAG = "ProductDetailsActivity";
     public static boolean running_rating_query = false;
+    public static boolean fromSearch = false;
     private ViewPager productImagesViewPager;
     private TextView productTitle;
     private TextView averageRatingMiniView;
@@ -96,7 +97,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     public static String selectedRewardId;
     public static TextView originalPrice;
     public static TextView discountedPrice;
-    public static String   forCalculationOriginalPrice;
+    public static String forCalculationOriginalPrice;
 
     ////coupendialog
 
@@ -172,7 +173,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     averageRatingMiniView.setText(documentSnapshot.get("average_rating").toString());
                     totalRatingMiniView.setText("(" + (long) documentSnapshot.get("total_ratings") + ")ratings");
                     productPrice.setText("Rs." + documentSnapshot.get("product_price").toString() + "/-");
-                     forCalculationOriginalPrice=documentSnapshot.get("product_price").toString();
+                    forCalculationOriginalPrice = documentSnapshot.get("product_price").toString();
                     cuttedPrice.setText("Rs." + documentSnapshot.get("cutted_price").toString() + "/-");
                     if ((boolean) documentSnapshot.get("COD")) {
                         codIndicator.setVisibility(View.VISIBLE);
@@ -470,20 +471,20 @@ public class ProductDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USERS_REWARDS").document(selectedRewardId)
-                        .update("is_applied",true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        .update("is_applied", true).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                          if(task.isSuccessful()){
-                              Log.d(TAG, "onClick: "+selectedRewardId);
-                              Toast.makeText(ProductDetailsActivity.this, "Congratulation, coupen has been Applied!", Toast.LENGTH_SHORT).show();
-                          }else {
-                              String error=task.getException().getMessage();
-                              Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
-                          }
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "onClick: " + selectedRewardId);
+                            Toast.makeText(ProductDetailsActivity.this, "Congratulation, coupen has been Applied!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            String error = task.getException().getMessage();
+                            Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
 
-                }
+            }
         });
         /////// coupen  diaglog....
 
@@ -628,7 +629,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -646,7 +646,12 @@ public class ProductDetailsActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.main_search_icon) {
             // to do search..
-
+            if (fromSearch) {
+                finish();
+            } else {
+                Intent searchIntent = new Intent(this, SearchActivity.class);
+                startActivity(searchIntent);
+            }
             return true;
         } else if (id == R.id.main_cart_icon) {
             if (currentUser == null) {
@@ -664,4 +669,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        fromSearch = false;
+    }
 }

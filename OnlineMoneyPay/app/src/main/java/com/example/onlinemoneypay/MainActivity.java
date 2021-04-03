@@ -291,8 +291,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.main_search_icon) {
-            // to do search..
-            Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show();
+            Intent searchIntent=new Intent(this,SearchActivity.class);
+            startActivity(searchIntent);
             return true;
         } else if (id == R.id.main_notification_icon) {
             // to do notification..
