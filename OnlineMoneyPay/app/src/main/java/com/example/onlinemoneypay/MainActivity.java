@@ -241,9 +241,17 @@ public class MainActivity extends AppCompatActivity {
 
 
             navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(true);
+
+           DBqueries.checkNotifications(false,null);
         }
 
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DBqueries.checkNotifications(true,null);
     }
 
     @Override
@@ -296,7 +304,9 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.main_notification_icon) {
             // to do notification..
-            Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show();
+             Intent notificationIntent=new Intent(this, NotificationActivity.class);
+             startActivity(notificationIntent);
+            //Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show();
 
             return true;
         } else if (id == R.id.main_cart_icon) {
