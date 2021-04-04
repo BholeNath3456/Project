@@ -93,17 +93,17 @@ public class FillCardDetailsActivity extends AppCompatActivity {
             }
         }
         setProduct.put("list_size", totalOrderItems);
-        FirebaseFirestore.getInstance().collection("ORDERS").document(orderId).collection("ORDER_ITEMS")
-                .add(setProduct).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+        FirebaseFirestore.getInstance().collection("ORDERS").document(orderId).collection("ORDER_ITEMS").document("PRODUCT_LIST")
+                .set(setProduct).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentReference> task) {
-                if (task.isSuccessful()) {
-                    loadingDialog.dismiss();
+            public void onComplete(@NonNull Task<Void> task) {
+              if(task.isSuccessful()){
+                  loadingDialog.dismiss();
+              }else{
+                  String error = task.getException().getMessage();
+                  Toast.makeText(FillCardDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
 
-                } else {
-                    String error = task.getException().getMessage();
-                    Toast.makeText(FillCardDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
-                }
+              }
             }
         });
 
