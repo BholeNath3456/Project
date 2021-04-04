@@ -48,7 +48,7 @@ public class FillCardDetailsActivity extends AppCompatActivity {
         finalTotalPrice = findViewById(R.id.final_total_price);
         textVieworderID = findViewById(R.id.orderId);
         orderId = UUID.randomUUID().toString().substring(0, 25);
-        finalTotalPrice.setText("Rs." + DeliveryActivity.totalItemPrice + "/-");
+        finalTotalPrice.setText(":Rs." + DeliveryActivity.totalItemPrice + "/-");
         textVieworderID.setText(orderId);
         transactionId = UUID.randomUUID().toString().substring(0, 15).concat("@omp");
         Log.d(TAG, "onCreate: " + transactionId);
@@ -90,6 +90,11 @@ public class FillCardDetailsActivity extends AppCompatActivity {
         settingOrders.put("PackedDate",timestamp);
         settingOrders.put("ShippingDate",timestamp);
         settingOrders.put("DeliveredDate",timestamp);
+        settingOrders.put("FullName",DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFullname());
+        settingOrders.put("FullAddress",DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAddress());
+        settingOrders.put("Pincode",DBqueries.addressesModelList.get(DBqueries.selectedAddress).getPincode());
+
+
 
         FirebaseFirestore.getInstance().collection("ORDERS").document(orderId)
                 .set(settingOrders).addOnCompleteListener(new OnCompleteListener<Void>() {
