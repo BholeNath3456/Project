@@ -21,8 +21,10 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.type.Date;
 
 import java.util.HashMap;
@@ -73,11 +75,28 @@ public class FillCardDetailsActivity extends AppCompatActivity {
                 loadingDialog.show();
                 settingOrdersInFirebase();
                 settingOrderItemsInFirebase();
+                LoadOrders();
 
             }
         });
         totalOrderItems = (MyCartFragment.cartItemModelsList.size() - 1);
 
+    }
+
+    public static void LoadOrders(){
+        MainActivity.orderID.clear();
+        FirebaseFirestore.getInstance().collection("ORDERS").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+
+                if(task.isSuccessful()){
+                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
+                        MainActivity.orderID.add(new OrderIDandStatus(documentSnapshot.get("OrderID").toString(),documentSnapshot.get("OrderStatus").toString()));
+                    }
+                }
+            }
+        });
     }
 
     Map<String, Object> setProduct = new HashMap<>();
@@ -119,6 +138,7 @@ public class FillCardDetailsActivity extends AppCompatActivity {
         settingOrders.put("isPaid", true);
         settingOrders.put("NumberOfProducts", (MyCartFragment.cartItemModelsList.size() - 1));
         settingOrders.put("TotalPrice", DeliveryActivity.totalItemPrice);
+        settingOrders.put("OrderStatus","");
         settingOrders.put("OrderedDate", FieldValue.serverTimestamp());
         settingOrders.put("PackedDate", timestamp);
         settingOrders.put("ShippingDate", timestamp);
@@ -144,5 +164,11 @@ public class FillCardDetailsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

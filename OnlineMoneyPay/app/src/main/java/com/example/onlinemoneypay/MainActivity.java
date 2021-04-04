@@ -218,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
 
             navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(false);
         } else {
+            orderID.clear();
             FirebaseFirestore.getInstance().collection("ORDERS").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {

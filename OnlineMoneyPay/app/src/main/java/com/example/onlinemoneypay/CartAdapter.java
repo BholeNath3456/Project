@@ -208,6 +208,7 @@ public class CartAdapter extends RecyclerView.Adapter {
                 public void onClick(View v) {
                     DBqueries.removeCartlist(itemView.getContext(), productID);
                     Toast.makeText(itemView.getContext(), "Item Deleted..", Toast.LENGTH_SHORT).show();
+                    MyCartFragment.cartAdapter.notifyDataSetChanged();
                 }
             });
         }

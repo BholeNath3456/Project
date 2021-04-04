@@ -245,6 +245,7 @@ public class HomeFragment extends Fragment {
             loadCategories(categoryRecyclerView, getContext());
             loadedCategoriesNames.add("HOME");
             lists.add(new ArrayList<HomePageModel>());
+            FillCardDetailsActivity.LoadOrders();
             loadFragmentdata(homePageRecyclerView, getContext(), 0, "Home");
 
         } else {
