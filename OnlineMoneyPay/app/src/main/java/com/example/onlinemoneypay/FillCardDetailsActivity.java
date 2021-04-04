@@ -48,7 +48,7 @@ public class FillCardDetailsActivity extends AppCompatActivity {
         //////////loading dialog
         loadingDialog = new Dialog(FillCardDetailsActivity.this);
         loadingDialog.setContentView(R.layout.loading_progress_dialog);
-        loadingDialog.setCancelable(true);
+        loadingDialog.setCancelable(false);
         loadingDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.slider_background));
         loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         loadingAnim = loadingDialog.findViewById(R.id.loading_anim);

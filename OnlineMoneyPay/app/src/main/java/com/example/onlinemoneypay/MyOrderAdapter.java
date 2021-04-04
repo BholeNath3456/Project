@@ -34,10 +34,10 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Viewhold
     @Override
     public void onBindViewHolder(@NonNull MyOrderAdapter.Viewholder viewholder, int position) {
         int resource =myOrderItemModelList.get(position).getProductImage();
-        int rating=myOrderItemModelList.get(position).getRating();
+      //  int rating=myOrderItemModelList.get(position).getRating();
         String title=myOrderItemModelList.get(position).getProductTitle();
         String deliveredDate=myOrderItemModelList.get(position).getDeliveryStatus();
-        viewholder.setData(resource,title,deliveredDate,rating);
+        viewholder.setData(resource,title,deliveredDate);
 
 
     }
@@ -74,7 +74,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Viewhold
               });
         }
 
-        private void setData(int resource, String title, String deliveryDate, int rating) {
+        private void setData(int resource, String title, String deliveryDate) {
             productImage.setImageResource(resource);
             productTitle.setText(title);
             if (deliveryDate.equals("Cancelled")) {
@@ -86,17 +86,17 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Viewhold
             deliveryStatus.setText(deliveryDate);
 
             /////// rating Layout...
-            setRating(rating);
-
-            for (int x = 0; x < rateNowContainer.getChildCount(); x++) {
-                final int starPosition = x;
-                rateNowContainer.getChildAt(x).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setRating(starPosition);
-                    }
-                });
-            }
+//            setRating(rating);
+//
+//            for (int x = 0; x < rateNowContainer.getChildCount(); x++) {
+//                final int starPosition = x;
+//                rateNowContainer.getChildAt(x).setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        setRating(starPosition);
+//                    }
+//                });
+//            }
             /////// rating Layout...
 
         }

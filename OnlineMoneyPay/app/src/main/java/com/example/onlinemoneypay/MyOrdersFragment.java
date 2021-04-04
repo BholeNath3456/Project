@@ -73,10 +73,10 @@ public class MyOrdersFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         myOrdersRecyclerView.setLayoutManager(layoutManager);
         List<MyOrderItemModel> myOrderItemModelList=new ArrayList<>();
-        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.mobile1,2,"Pixel 3XL (Blue)","Delivered on Thursday"));
-        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.bin,1,"Pixel 3XL (Blue)","Delivered on Monday"));
-        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.check_icon,0,"Pixel 3XL (Blue)","Cancelled"));
-        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.mobile1,4,"Pixel 3XL (Blue)","Delivered on Thursday"));
+        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.mobile1,"Pixel 3XL (Blue)","Delivered on Thursday"));
+        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.bin,"Pixel 3XL (Blue)","Delivered on Monday"));
+        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.check_icon,"Pixel 3XL (Blue)","Cancelled"));
+        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.mobile1,"Pixel 3XL (Blue)","Delivered on Thursday"));
         MyOrderAdapter myOrderAdapter=new MyOrderAdapter(myOrderItemModelList);
         myOrdersRecyclerView.setAdapter(myOrderAdapter);
         myOrderAdapter.notifyDataSetChanged();
