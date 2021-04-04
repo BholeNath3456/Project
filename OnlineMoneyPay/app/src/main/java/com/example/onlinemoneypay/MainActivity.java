@@ -37,6 +37,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -51,7 +52,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -61,7 +64,7 @@ import static com.example.onlinemoneypay.RegisterActivity.setSignUpFragment;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-
+    public static List<String> orderID=new ArrayList<>();
     private FrameLayout frameLayout;
     private FirebaseUser currentUser;
     private static final int HOME_FRAGMENT = 0;
@@ -202,7 +205,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        FirebaseFirestore.getInstance().collection("ORDERS").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
+                if(task.isSuccessful()){
+                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
+                        orderID.add( documentSnapshot.get("OrderID").toString());
+                    }
+                }
+            }
+        });
     }
 
 

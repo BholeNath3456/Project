@@ -90,6 +90,7 @@ public class FillCardDetailsActivity extends AppCompatActivity {
             if (MyCartFragment.cartItemModelsList.get(x).getType() == CartItemModel.CART_ITEM) {
                 setProduct.put("productID_" + x, MyCartFragment.cartItemModelsList.get(x).getProductID());
                 setProduct.put("productImage_" + x, MyCartFragment.cartItemModelsList.get(x).getProductImage());
+                setProduct.put("productTitle_" + x, MyCartFragment.cartItemModelsList.get(x).getProductTitle());
             }
         }
         setProduct.put("list_size", totalOrderItems);
@@ -112,6 +113,7 @@ public class FillCardDetailsActivity extends AppCompatActivity {
 
     private void settingOrdersInFirebase() {
         Map<String, Object> settingOrders = new HashMap<>();
+        settingOrders.put("OrderID",orderId);
         settingOrders.put("CustomerID", FirebaseAuth.getInstance().getUid());
         settingOrders.put("TransactionID", transactionId);
         settingOrders.put("isPaid", true);

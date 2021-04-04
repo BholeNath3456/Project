@@ -447,6 +447,8 @@ public class DBqueries {
         MyWishlistFragment.wishlistModelList.clear();
         MyCartFragment.cartItemModelsList.clear();
         notificationModelList.clear();
+        MyOrdersFragment.myOrderItemModelList.clear();
+        MainActivity.orderID.clear();
 
     }
 
