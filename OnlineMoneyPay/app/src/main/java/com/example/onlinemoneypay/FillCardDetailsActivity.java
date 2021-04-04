@@ -19,6 +19,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.type.Date;
@@ -39,6 +41,7 @@ public class FillCardDetailsActivity extends AppCompatActivity {
     private ImageView loadingAnim;
     public static List<String> orderProductID;
     private Timestamp timestamp;
+    private int totalOrderItems;
 
 
     @Override
@@ -53,11 +56,7 @@ public class FillCardDetailsActivity extends AppCompatActivity {
         transactionId = UUID.randomUUID().toString().substring(0, 15).concat("@omp");
         Log.d(TAG, "onCreate: " + transactionId);
         payNow = findViewById(R.id.final_pay_now);
-        for (int x = 0; x < MyCartFragment.cartItemModelsList.size(); x++) {
-            if (MyCartFragment.cartItemModelsList.get(x).getType() == CartItemModel.CART_ITEM) {
-                Log.d(TAG, "onCreate: " + MyCartFragment.cartItemModelsList.get(x).getProductID());
-            }
-        }
+
         //////////loading dialog
         loadingDialog = new Dialog(FillCardDetailsActivity.this);
         loadingDialog.setContentView(R.layout.loading_progress_dialog);
@@ -73,6 +72,38 @@ public class FillCardDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 loadingDialog.show();
                 settingOrdersInFirebase();
+                settingOrderItemsInFirebase();
+
+            }
+        });
+        totalOrderItems = (MyCartFragment.cartItemModelsList.size() - 1);
+
+    }
+
+    Map<String, Object> setProduct = new HashMap<>();
+
+    private void settingOrderItemsInFirebase() {
+
+        setProduct.clear();
+        for (int x = 0; x < MyCartFragment.cartItemModelsList.size(); x++) {
+
+            if (MyCartFragment.cartItemModelsList.get(x).getType() == CartItemModel.CART_ITEM) {
+                setProduct.put("productID_" + x, MyCartFragment.cartItemModelsList.get(x).getProductID());
+                setProduct.put("productImage_" + x, MyCartFragment.cartItemModelsList.get(x).getProductImage());
+            }
+        }
+        setProduct.put("list_size", totalOrderItems);
+        FirebaseFirestore.getInstance().collection("ORDERS").document(orderId).collection("ORDER_ITEMS")
+                .add(setProduct).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentReference> task) {
+                if (task.isSuccessful()) {
+                    loadingDialog.dismiss();
+
+                } else {
+                    String error = task.getException().getMessage();
+                    Toast.makeText(FillCardDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -85,15 +116,14 @@ public class FillCardDetailsActivity extends AppCompatActivity {
         settingOrders.put("TransactionID", transactionId);
         settingOrders.put("isPaid", true);
         settingOrders.put("NumberOfProducts", (MyCartFragment.cartItemModelsList.size() - 1));
-        settingOrders.put("TotalPrice", DeliveryActivity.totalItemPrice );
+        settingOrders.put("TotalPrice", DeliveryActivity.totalItemPrice);
         settingOrders.put("OrderedDate", FieldValue.serverTimestamp());
-        settingOrders.put("PackedDate",timestamp);
-        settingOrders.put("ShippingDate",timestamp);
-        settingOrders.put("DeliveredDate",timestamp);
-        settingOrders.put("FullName",DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFullname());
-        settingOrders.put("FullAddress",DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAddress());
-        settingOrders.put("Pincode",DBqueries.addressesModelList.get(DBqueries.selectedAddress).getPincode());
-
+        settingOrders.put("PackedDate", timestamp);
+        settingOrders.put("ShippingDate", timestamp);
+        settingOrders.put("DeliveredDate", timestamp);
+        settingOrders.put("FullName", DBqueries.addressesModelList.get(DBqueries.selectedAddress).getFullname());
+        settingOrders.put("FullAddress", DBqueries.addressesModelList.get(DBqueries.selectedAddress).getAddress());
+        settingOrders.put("Pincode", DBqueries.addressesModelList.get(DBqueries.selectedAddress).getPincode());
 
 
         FirebaseFirestore.getInstance().collection("ORDERS").document(orderId)
