@@ -64,7 +64,7 @@ import static com.example.onlinemoneypay.RegisterActivity.setSignUpFragment;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    public static List<String> orderID=new ArrayList<>();
+    public static List<OrderIDandStatus> orderID=new ArrayList<>();
     private FrameLayout frameLayout;
     private FirebaseUser currentUser;
     private static final int HOME_FRAGMENT = 0;
@@ -222,9 +222,10 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
+
                     if(task.isSuccessful()){
                         for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
-                            orderID.add( documentSnapshot.get("OrderID").toString());
+                            orderID.add(new OrderIDandStatus(documentSnapshot.get("OrderID").toString(),documentSnapshot.get("OrderStatus").toString()));
                         }
                     }
                 }

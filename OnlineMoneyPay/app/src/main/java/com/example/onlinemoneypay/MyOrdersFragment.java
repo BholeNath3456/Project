@@ -88,7 +88,8 @@ public class MyOrdersFragment extends Fragment {
         myOrdersRecyclerView.setAdapter(myOrderAdapter);
 
         for (int i = 0; i < MainActivity.orderID.size(); i++) {
-            FirebaseFirestore.getInstance().collection("ORDERS").document(MainActivity.orderID.get(i)).collection("ORDER_ITEMS").document("PRODUCT_LIST").get()
+            int finalI = i;
+            FirebaseFirestore.getInstance().collection("ORDERS").document(MainActivity.orderID.get(i).getOrderID()).collection("ORDER_ITEMS").document("PRODUCT_LIST").get()
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -98,7 +99,7 @@ public class MyOrdersFragment extends Fragment {
                                 myOrderItemModelList.add(new MyOrderItemModel(
                                         task.getResult().get("productImage_" + j).toString()
                                         , task.getResult().get("productTitle_" + j).toString()
-                                        , "Cancelled"));
+                                        , MainActivity.orderID.get(finalI).getOrderStatus()));
                             }
                             myOrderAdapter.notifyDataSetChanged();
                         }
