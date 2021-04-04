@@ -84,24 +84,37 @@ public class MyOrdersFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         myOrdersRecyclerView.setLayoutManager(layoutManager);
-
-       FirebaseFirestore.getInstance().collection("ORDERS").document(MainActivity.orderID.get(0)).collection("ORDER_ITEMS").document("PRODUCT_LIST").get()
-               .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                   @Override
-                   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                       Log.d(TAG, "onComplete: List Size"+ task.getResult().get("list_size"));
-                   }
-               });
-
-
-        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.mobile1, "Pixel 3XL (Blue)", "Delivered on Thursday"));
-        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.bin, "Pixel 3XL (Blue)", "Delivered on Monday"));
-        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.check_icon, "Pixel 3XL (Blue)", "Cancelled"));
-        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.mobile1, "Pixel 3XL (Blue)", "Delivered on Thursday"));
-
         MyOrderAdapter myOrderAdapter = new MyOrderAdapter(myOrderItemModelList);
         myOrdersRecyclerView.setAdapter(myOrderAdapter);
+
+        for (int i = 0; i < MainActivity.orderID.size(); i++) {
+            FirebaseFirestore.getInstance().collection("ORDERS").document(MainActivity.orderID.get(i)).collection("ORDER_ITEMS").document("PRODUCT_LIST").get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            //   DocumentSnapshot documentSnapshot=task.getResult();
+                            Log.d(TAG, "onComplete: List Size" + task.getResult().get("list_size"));
+                            for (int j = 1; j <= Integer.parseInt(task.getResult().get("list_size").toString()); j++) {
+                                myOrderItemModelList.add(new MyOrderItemModel(
+                                        task.getResult().get("productImage_" + j).toString()
+                                        , task.getResult().get("productTitle_" + j).toString()
+                                        , "Cancelled"));
+                            }
+                            myOrderAdapter.notifyDataSetChanged();
+                        }
+                    });
+
+
+        }
         myOrderAdapter.notifyDataSetChanged();
+
+
+//        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.mobile1, "Pixel 3XL (Blue)", "Delivered on Thursday"));
+//        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.bin, "Pixel 3XL (Blue)", "Delivered on Monday"));
+//        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.check_icon, "Pixel 3XL (Blue)", "Cancelled"));
+//        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.mobile1, "Pixel 3XL (Blue)", "Delivered on Thursday"));
+
+
         return view;
     }
 }

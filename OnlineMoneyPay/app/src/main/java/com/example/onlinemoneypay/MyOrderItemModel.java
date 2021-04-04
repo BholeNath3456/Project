@@ -1,22 +1,22 @@
 package com.example.onlinemoneypay;
 
 public class MyOrderItemModel {
-    private int productImage;
+    private String productImage;
 //    private int rating;
     private String productTitle;
     private String deliveryStatus;
 
-    public MyOrderItemModel(int productImage, String productTitle, String deliveryStatus) {
+    public MyOrderItemModel(String productImage, String productTitle, String deliveryStatus) {
         this.productImage = productImage;
         this.productTitle = productTitle;
         this.deliveryStatus = deliveryStatus;
     }
 
-    public int getProductImage() {
+    public String getProductImage() {
         return productImage;
     }
 
-    public void setProductImage(int productImage) {
+    public void setProductImage(String productImage) {
         this.productImage = productImage;
     }
 

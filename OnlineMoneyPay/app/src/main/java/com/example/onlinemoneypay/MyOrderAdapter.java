@@ -13,6 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Viewholder> {
@@ -33,7 +35,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Viewhold
 
     @Override
     public void onBindViewHolder(@NonNull MyOrderAdapter.Viewholder viewholder, int position) {
-        int resource =myOrderItemModelList.get(position).getProductImage();
+        String resource =myOrderItemModelList.get(position).getProductImage();
       //  int rating=myOrderItemModelList.get(position).getRating();
         String title=myOrderItemModelList.get(position).getProductTitle();
         String deliveredDate=myOrderItemModelList.get(position).getDeliveryStatus();
@@ -74,8 +76,9 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Viewhold
               });
         }
 
-        private void setData(int resource, String title, String deliveryDate) {
-            productImage.setImageResource(resource);
+        private void setData(String resource, String title, String deliveryDate) {
+           // productImage.setImageResource(resource);
+            Glide.with(itemView.getContext()).load(resource).into(productImage);
             productTitle.setText(title);
             if (deliveryDate.equals("Cancelled")) {
                 orderIndicator.setImageTintList(ColorStateList.valueOf(itemView.getContext().getResources().getColor(R.color.red)));

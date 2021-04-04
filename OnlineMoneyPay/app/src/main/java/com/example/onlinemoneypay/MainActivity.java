@@ -205,17 +205,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FirebaseFirestore.getInstance().collection("ORDERS").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                if(task.isSuccessful()){
-                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
-                        orderID.add( documentSnapshot.get("OrderID").toString());
-                    }
-                }
-            }
-        });
     }
 
 
@@ -228,6 +218,18 @@ public class MainActivity extends AppCompatActivity {
 
             navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(false);
         } else {
+            FirebaseFirestore.getInstance().collection("ORDERS").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                    if(task.isSuccessful()){
+                        for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
+                            orderID.add( documentSnapshot.get("OrderID").toString());
+                        }
+                    }
+                }
+            });
+
             FirebaseFirestore.getInstance().collection("USERS").document(currentUser.getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
