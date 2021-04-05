@@ -39,6 +39,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Viewhold
       //  int rating=myOrderItemModelList.get(position).getRating();
         String title=myOrderItemModelList.get(position).getProductTitle();
         String deliveredDate=myOrderItemModelList.get(position).getDeliveryStatus();
+
         viewholder.setData(resource,title,deliveredDate);
 
 
