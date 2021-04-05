@@ -110,6 +110,7 @@ public class FillCardDetailsActivity extends AppCompatActivity {
                 setProduct.put("productID_" + x, MyCartFragment.cartItemModelsList.get(x).getProductID());
                 setProduct.put("productImage_" + x, MyCartFragment.cartItemModelsList.get(x).getProductImage());
                 setProduct.put("productTitle_" + x, MyCartFragment.cartItemModelsList.get(x).getProductTitle());
+                setProduct.put("orderID_"+x,orderId);
             }
         }
         setProduct.put("list_size", totalOrderItems);

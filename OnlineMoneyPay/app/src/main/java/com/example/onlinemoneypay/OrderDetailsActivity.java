@@ -68,29 +68,17 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
         orderedIndicator.setColorFilter(Color.argb(255, 0, 255, 0));
         orderProgressBar.setProgress(50);
-
-
-//        for (int i = 0; i < MainActivity.orderID.size(); i++) {
-//            int finalI = i;
-//            FirebaseFirestore.getInstance().collection("ORDERS").document(MainActivity.orderID.get(i).getOrderID()).get()
-//                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                         orderId.setText(task.getResult().get("OrderID").toString());
-//                        }
-//                    });
-//               }
-
+        int position = getIntent().getIntExtra("Position", 0);
 
         /// firebase
-        //     FirebaseFirestore.getInstance().collection("ORDERS").get(MainActivity.orderID.get()).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-
-
-        /// firebase
-
-
+        FirebaseFirestore.getInstance().collection("ORDERS").document(MyOrdersFragment.myOrderItemModelList.get(position).getOrderID()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        orderId.setText(task.getResult().get("OrderID").toString());
+                    }
+                });
     }
-
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

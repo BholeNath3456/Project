@@ -3,6 +3,7 @@ package com.example.onlinemoneypay;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Viewholder> {
+    private static final String TAG = "MyOrderAdapter";
     private List<MyOrderItemModel> myOrderItemModelList;
 
     public MyOrderAdapter(List<MyOrderItemModel> myOrderItemModelList) {
@@ -68,10 +70,14 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Viewhold
             orderIndicator = itemView.findViewById(R.id.order_indicator);
             deliveryStatus = itemView.findViewById(R.id.order_delivered_date);
             rateNowContainer = itemView.findViewById(R.id.rate_now_container);
+
+
               itemView.setOnClickListener(new View.OnClickListener() {
                   @Override
                   public void onClick(View v) {
                       Intent orderDetailsIntent=new Intent(itemView.getContext(),OrderDetailsActivity.class);
+                      Log.d(TAG, "onClick: "+getAdapterPosition());
+                      orderDetailsIntent.putExtra("Position",  getAdapterPosition());
                       itemView.getContext().startActivity(orderDetailsIntent);
                   }
               });

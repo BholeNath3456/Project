@@ -99,7 +99,8 @@ public class MyOrdersFragment extends Fragment {
                                 myOrderItemModelList.add(new MyOrderItemModel(
                                         task.getResult().get("productImage_" + j).toString()
                                         , task.getResult().get("productTitle_" + j).toString()
-                                        , MainActivity.orderID.get(finalI).getOrderStatus()));
+                                        , MainActivity.orderID.get(finalI).getOrderStatus()
+                                        , task.getResult().get("orderID_" + j).toString()));
                             }
                             myOrderAdapter.notifyDataSetChanged();
                         }
