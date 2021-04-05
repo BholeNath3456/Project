@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -75,7 +76,21 @@ public class OrderDetailsActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        orderId.setText(task.getResult().get("OrderID").toString());
+                        orderId.setText("Your Order Id: " + task.getResult().get("OrderID").toString());
+                        Log.d(TAG, "onComplete: Number of Product: " + task.getResult().get("NumberOfProducts"));
+                        Log.d(TAG, "onComplete: Total Price :" + task.getResult().get("TotalPrice"));
+                        Log.d(TAG, "onComplete: Total Items price" + task.getResult().get("TotalPrice"));
+
+                        cartSavedAmount.setText("Your transction ID : " + task.getResult().get("TransactionID").toString());
+
+                        fullname.setText(task.getResult().get("FullName").toString());
+                        fulladdress.setText(task.getResult().get("FullAddress").toString());
+                        pincode.setText(task.getResult().get("Pincode").toString());
+
+                        totalPrice.setText("Rs. " + task.getResult().get("TotalPrice").toString() + "/-");
+                        cartotalItemsPrice.setText("Rs. " + task.getResult().get("TotalPrice").toString() + "/-");
+                        cartTotalPrice.setText("Rs. " + task.getResult().get("TotalPrice").toString() + "/-");
+                        cartTotalItems.setText("Price (" + task.getResult().get("NumberOfProducts").toString() + ") item");
                     }
                 });
     }

@@ -86,7 +86,7 @@ public class MyOrdersFragment extends Fragment {
         myOrdersRecyclerView.setLayoutManager(layoutManager);
         MyOrderAdapter myOrderAdapter = new MyOrderAdapter(myOrderItemModelList);
         myOrdersRecyclerView.setAdapter(myOrderAdapter);
-
+        myOrderItemModelList.clear();
         for (int i = 0; i < MainActivity.orderID.size(); i++) {
             int finalI = i;
             FirebaseFirestore.getInstance().collection("ORDERS").document(MainActivity.orderID.get(i).getOrderID()).collection("ORDER_ITEMS").document("PRODUCT_LIST").get()
