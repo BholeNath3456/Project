@@ -16,9 +16,13 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class OrderDetailsActivity extends AppCompatActivity {
     private static final String TAG = "OrderDetailsActivity";
@@ -27,8 +31,10 @@ public class OrderDetailsActivity extends AppCompatActivity {
     private ImageView orderedIndicator, packedIndicator, shippingIndicator, deliveredIndicator;
     //cart
     private TextView cartTotalItems, cartotalItemsPrice, cartTotalPrice, cartSavedAmount;
-
     //cart
+    //Order Date
+    private TextView orderedDate, packedDate, shippingDate, deliveredDate;
+    //Order Date
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -40,6 +46,12 @@ public class OrderDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle("Orders Details");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //Progress Date
+        orderedDate = findViewById(R.id.ordered_date);
+        packedDate = findViewById(R.id.packed_date);
+        shippingDate = findViewById(R.id.shipping_date);
+        deliveredDate = findViewById(R.id.delivered_date);
+        //Progress Date
 
 
         orderId = findViewById(R.id.product_title);
@@ -67,11 +79,17 @@ public class OrderDetailsActivity extends AppCompatActivity {
         //Cart
 
 
-        orderedIndicator.setColorFilter(Color.argb(255, 0, 255, 0));
-        orderProgressBar.setProgress(50);
-        int position = getIntent().getIntExtra("Position", 0);
+    }
 
-        /// firebase
+    @Override
+    protected void onStart() {
+        super.onStart();  /// firebase
+        int position = getIntent().getIntExtra("Position", 0);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MMMM/YYYY");
+        loadingOrders(position, simpleDateFormat);
+    }
+
+    private void loadingOrders(int position, SimpleDateFormat simpleDateFormat) {
         FirebaseFirestore.getInstance().collection("ORDERS").document(MyOrdersFragment.myOrderItemModelList.get(position).getOrderID()).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -80,7 +98,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
                         Log.d(TAG, "onComplete: Number of Product: " + task.getResult().get("NumberOfProducts"));
                         Log.d(TAG, "onComplete: Total Price :" + task.getResult().get("TotalPrice"));
                         Log.d(TAG, "onComplete: Total Items price" + task.getResult().get("TotalPrice"));
-
                         cartSavedAmount.setText("Your transction ID : " + task.getResult().get("TransactionID").toString());
 
                         fullname.setText(task.getResult().get("FullName").toString());
@@ -91,8 +108,53 @@ public class OrderDetailsActivity extends AppCompatActivity {
                         cartotalItemsPrice.setText("Rs. " + task.getResult().get("TotalPrice").toString() + "/-");
                         cartTotalPrice.setText("Rs. " + task.getResult().get("TotalPrice").toString() + "/-");
                         cartTotalItems.setText("Price (" + task.getResult().get("NumberOfProducts").toString() + ") item");
+                        // Date Checking...
+                        Date order = task.getResult().getDate("OrderedDate");
+                        if (order != null) {
+                            orderedIndicator.setColorFilter(Color.argb(255, 0, 255, 0));
+                            orderProgressBar.setProgress(20);
+                            orderedDate.setText(simpleDateFormat.format(order));
+
+                            Date place = task.getResult().getDate("PackedDate");
+                            if (place != null) {
+                                orderedIndicator.setColorFilter(Color.argb(255, 0, 255, 0));
+                                packedIndicator.setColorFilter(Color.argb(255, 0, 255, 0));
+                                packedShippingProgress.setProgress(20);
+                                orderProgressBar.setProgress(100);
+                                packedDate.setText(simpleDateFormat.format(place));
+
+                                Date shipping = task.getResult().getDate("ShippingDate");
+                                if (shipping != null) {
+                                    orderedIndicator.setColorFilter(Color.argb(255, 0, 255, 0));
+                                    packedIndicator.setColorFilter(Color.argb(255, 0, 255, 0));
+                                    shippingIndicator.setColorFilter(Color.argb(255, 0, 255, 0));
+                                    packedShippingProgress.setProgress(100);
+                                    orderProgressBar.setProgress(100);
+                                    shippingDeliveredProgress.setProgress(20);
+                                    shippingDate.setText(simpleDateFormat.format(shipping));
+
+                                    Date deliver = task.getResult().getDate("DeliveredDate");
+                                    if (deliver != null) {
+                                        orderedIndicator.setColorFilter(Color.argb(255, 0, 255, 0));
+                                        packedIndicator.setColorFilter(Color.argb(255, 0, 255, 0));
+                                        shippingIndicator.setColorFilter(Color.argb(255, 0, 255, 0));
+                                        deliveredIndicator.setColorFilter(Color.argb(255, 0, 255, 0));
+                                        packedShippingProgress.setProgress(100);
+                                        orderProgressBar.setProgress(100);
+                                        shippingDeliveredProgress.setProgress(100);
+                                        deliveredDate.setText(simpleDateFormat.format(deliver));
+                                    }
+                                }
+                            }
+                        }
+
+
+                        // Date Checking...
+
+
                     }
                 });
+
     }
 
     @Override
