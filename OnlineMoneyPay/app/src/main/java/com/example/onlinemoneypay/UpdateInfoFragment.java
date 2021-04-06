@@ -1,6 +1,7 @@
 package com.example.onlinemoneypay;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,7 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +31,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -44,14 +50,20 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UpdateInfoFragment extends Fragment {
     private static final String TAG = "UpdateInfoFragment";
     private Button selectPhoto, updatePhoto, updateName, updateEmail;
-    private EditText inputName, inputEmail;
+    private EditText editTextinputName, editTextinputEmail;
     private CircleImageView userPhoto;
     private FirebaseUser user;
     private Uri uri = null;
     private boolean isUpdatePhoto = false;
     private StorageReference mStorageReference;
-    private String imgUrl=null;
+    private String imgUrl = null;
     StorageReference fileReference;
+    private Dialog passwordDialog;
+    private EditText editTextpassword;
+    private Button doneBtn;
+    private String previousEmail;
+    private String previousName;
+    private String previousPhoto;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -102,11 +114,28 @@ public class UpdateInfoFragment extends Fragment {
         updatePhoto = view.findViewById(R.id.update_photo);
         updateName = view.findViewById(R.id.name_update_btn);
         updateEmail = view.findViewById(R.id.email_update_btn);
-        inputName = view.findViewById(R.id.user_updated_name);
-        inputEmail = view.findViewById(R.id.user_updated_email);
+        editTextinputName = view.findViewById(R.id.user_updated_name);
+        editTextinputEmail = view.findViewById(R.id.user_updated_email);
         user = FirebaseAuth.getInstance().getCurrentUser();
-        mStorageReference=FirebaseStorage.getInstance().getReference("UserProfile");
+        mStorageReference = FirebaseStorage.getInstance().getReference("UserProfile");
 
+        previousName = getArguments().getString("Name");
+        previousEmail = getArguments().getString("Email");
+        previousPhoto = getArguments().getString("Photo");
+
+        Glide.with(getContext()).load(previousPhoto).into(userPhoto);
+        editTextinputEmail.setText(previousEmail);
+        editTextinputName.setText(previousName);
+        //////////password dialog
+
+        passwordDialog = new Dialog(getContext());
+        passwordDialog.setContentView(R.layout.password_confirmation_dialog);
+        passwordDialog.setCancelable(true);
+        passwordDialog.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.slider_background));
+        passwordDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        editTextpassword = passwordDialog.findViewById(R.id.password);
+        doneBtn = passwordDialog.findViewById(R.id.done_btn);
+        //////////password dialog
 
         selectPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,44 +153,118 @@ public class UpdateInfoFragment extends Fragment {
                     galleryIntent.setType("image/*");
                     startActivityForResult(galleryIntent, 1);
                 }
-                Toast.makeText(getContext(), "You clicked Me!", Toast.LENGTH_SHORT).show();
-            }
-        });
-        updateName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String name=inputName.getText().toString().trim();
-                FirebaseFirestore.getInstance().collection("USERS").document(user.getUid())
-                        .update("name",name).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            Toast.makeText(getContext(), "Name uploaded Successfully.", Toast.LENGTH_SHORT).show();
-                        }else {
-                            Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                Toast.makeText(getContext(), "Update your Name", Toast.LENGTH_SHORT).show();
-            }
-        });
-        updateEmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "You can update Email", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Choose your photo!", Toast.LENGTH_SHORT).show();
             }
         });
         updatePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 uploadPhotoInFirebase();
-                if(isUpdatePhoto){
+            }
+        });
+        String inputName=editTextinputName.getText().toString().trim();
+        String inputEmail=editTextinputEmail.getText().toString().trim();
+
+        editTextinputName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //checkInputs();
+
+                String inputName=editTextinputName.getText().toString().trim();
+                if (inputName.length() < 3) {
+                    editTextinputName.setError("Name should be greater than 3 character");
+                    editTextinputName.setFocusable(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                String inputName=editTextinputName.getText().toString().trim();
+                if (inputName.isEmpty()) {
+                    editTextinputName.setError("Name required!");
+                    editTextinputName.setFocusable(true);
+                }
+            }
+        });
+        editTextinputEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String inputEmail=editTextinputEmail.getText().toString().trim();
+                if (!inputEmail.matches(String.valueOf(Patterns.EMAIL_ADDRESS))) {
+                    editTextinputEmail.setError("Invalid Email!");
+                    editTextinputEmail.setFocusable(true);
+
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+                String inputEmail=editTextinputEmail.getText().toString().trim();
+
+                if (inputEmail.isEmpty()) {
+                    editTextinputEmail.setError("Email Required!");
+                    editTextinputEmail.setFocusable(true);
 
                 }
             }
         });
 
+        updateName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String inputName=editTextinputName.getText().toString().trim();
+                if (inputName.length() < 3) {
+                    editTextinputName.setError("Name should be greater than 3 character");
+                    editTextinputName.setFocusable(true);
+                }else if (inputName.isEmpty()) {
+                    editTextinputName.setError("Name required!");
+                    editTextinputName.setFocusable(true);
+                }else if(inputName.equals(previousName)){
+                    Toast.makeText(getContext(), "You do not change your name!", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    updateNameInFirebase();
+                }
+
+            }
+        });
+        updateEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String inputEmail=editTextinputEmail.getText().toString().trim();
+                if (!inputEmail.matches(String.valueOf(Patterns.EMAIL_ADDRESS))) {
+                    editTextinputEmail.setError("Invalid Email!");
+                    editTextinputEmail.setFocusable(true);
+                }else if (inputEmail.isEmpty()) {
+                    editTextinputEmail.setError("Email Required!");
+                    editTextinputEmail.setFocusable(true);
+                }else if(inputEmail.equals(previousEmail)){
+                    Toast.makeText(getContext(), "You do not change your Email!", Toast.LENGTH_SHORT).show();
+                }else {
+                    updateEmailInFirebase();
+                }
+
+            }
+        });
+
+
         return view;
+    }
+
+    private void updateEmailInFirebase() {
+        Toast.makeText(getContext(), "You are changing your Email.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateNameInFirebase() {
+        Toast.makeText(getContext(), "You are changing your Name.", Toast.LENGTH_SHORT).show();
     }
 
     private String getFileExtension(Uri uri) {
@@ -169,50 +272,47 @@ public class UpdateInfoFragment extends Fragment {
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cr.getType(uri));
     }
-
     private void uploadPhotoInFirebase() {
-             if(uri!=null){
-                 fileReference=mStorageReference.child(user.getUid()+""+getFileExtension(uri));
-                 fileReference.putFile(uri)
-                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                             @Override
-                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                 Log.d(TAG, "onSuccess: "+taskSnapshot.getMetadata());
-                                 isUpdatePhoto = true;
-                                 fileReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                     @Override
-                                     public void onComplete(@NonNull Task<Uri> task) {
-                                         if(task.isSuccessful()){
-                                             imgUrl=task.getResult().toString();
-                                             FirebaseFirestore.getInstance().collection("USERS").document(user.getUid())
-                                                     .update("profile",imgUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                 @Override
-                                                  public void onComplete(@NonNull Task<Void> task) {
-                                                         if (task.isSuccessful()){
-                                                             Toast.makeText(getContext(), "Image uploaded Successfully.", Toast.LENGTH_SHORT).show();
-                                                             Log.d(TAG, "onComplete:Image url is : "+imgUrl);
-                                                         }else {
-                                                             Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                                         }
-                                                  }
-                                             });
+        if (uri != null) {
+            fileReference = mStorageReference.child(user.getUid() + "" + getFileExtension(uri));
+            fileReference.putFile(uri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Log.d(TAG, "onSuccess: " + taskSnapshot.getMetadata());
+                            isUpdatePhoto = true;
+                            fileReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    if (task.isSuccessful()) {
+                                        imgUrl = task.getResult().toString();
+                                        FirebaseFirestore.getInstance().collection("USERS").document(user.getUid())
+                                                .update("profile", imgUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(getContext(), "Image uploaded Successfully.", Toast.LENGTH_SHORT).show();
+                                                    Log.d(TAG, "onComplete:Image url is : " + imgUrl);
+                                                } else {
+                                                    Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
 
-                                         }
-                                     }
-                                 });
-                             }
-                         }).addOnFailureListener(new OnFailureListener() {
-                     @Override
-                     public void onFailure(@NonNull Exception e) {
-                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                     }
-                 });
-             }else {
-                 Toast.makeText(getContext(), "No File Selected.", Toast.LENGTH_SHORT).show();
-             }
+                                    }
+                                }
+                            });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(getContext(), "No File Selected.", Toast.LENGTH_SHORT).show();
+        }
     }
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -230,7 +330,6 @@ public class UpdateInfoFragment extends Fragment {
             }
         }
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
