@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -50,7 +51,7 @@ public class UpdateInfoFragment extends Fragment {
     private boolean isUpdatePhoto = false;
     private StorageReference mStorageReference;
     private String imgUrl=null;
-
+    StorageReference fileReference;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -140,6 +141,9 @@ public class UpdateInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 uploadPhotoInFirebase();
+                if(isUpdatePhoto){
+
+                }
             }
         });
 
@@ -154,12 +158,32 @@ public class UpdateInfoFragment extends Fragment {
 
     private void uploadPhotoInFirebase() {
              if(uri!=null){
-                 StorageReference fileReference=mStorageReference.child(user.getUid()+""+getFileExtension(uri));
+                 fileReference=mStorageReference.child(user.getUid()+""+getFileExtension(uri));
                  fileReference.putFile(uri)
                          .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                              @Override
                              public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                  Log.d(TAG, "onSuccess: "+taskSnapshot.getMetadata());
+                                 isUpdatePhoto = true;
+                                 fileReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                     @Override
+                                     public void onComplete(@NonNull Task<Uri> task) {
+                                         if(task.isSuccessful()){
+                                             imgUrl=task.getResult().toString();
+                                             FirebaseFirestore.getInstance().collection("USERS").document(user.getUid())
+                                                     .update("profile",imgUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                 @Override
+                                                  public void onComplete(@NonNull Task<Void> task) {
+                                                         if (task.isSuccessful()){
+                                                             Toast.makeText(getContext(), "Image uploaded Successfully.", Toast.LENGTH_SHORT).show();
+                                                             Log.d(TAG, "onComplete:Image url is : "+imgUrl);
+                                                         }
+                                                  }
+                                             });
+
+                                         }
+                                     }
+                                 });
                              }
                          }).addOnFailureListener(new OnFailureListener() {
                      @Override
