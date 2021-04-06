@@ -106,6 +106,8 @@ public class UpdateInfoFragment extends Fragment {
         inputEmail = view.findViewById(R.id.user_updated_email);
         user = FirebaseAuth.getInstance().getCurrentUser();
         mStorageReference=FirebaseStorage.getInstance().getReference("UserProfile");
+
+
         selectPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,6 +130,18 @@ public class UpdateInfoFragment extends Fragment {
         updateName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String name=inputName.getText().toString().trim();
+                FirebaseFirestore.getInstance().collection("USERS").document(user.getUid())
+                        .update("name",name).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Toast.makeText(getContext(), "Name uploaded Successfully.", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
                 Toast.makeText(getContext(), "Update your Name", Toast.LENGTH_SHORT).show();
             }
         });
@@ -177,6 +191,8 @@ public class UpdateInfoFragment extends Fragment {
                                                          if (task.isSuccessful()){
                                                              Toast.makeText(getContext(), "Image uploaded Successfully.", Toast.LENGTH_SHORT).show();
                                                              Log.d(TAG, "onComplete:Image url is : "+imgUrl);
+                                                         }else {
+                                                             Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                                          }
                                                   }
                                              });
