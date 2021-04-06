@@ -7,6 +7,9 @@
     android:orientation="vertical"
     tools:context=".UpdateInfoFragment">
 
+
+
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
         android:layout_width="85dp"
