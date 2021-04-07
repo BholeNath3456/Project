@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -64,6 +65,9 @@ public class UpdateInfoFragment extends Fragment {
     private String previousEmail;
     private String previousName;
     private String previousPhoto;
+
+    private Dialog loadingDialog;
+    private ImageView loadingAnim;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -137,6 +141,16 @@ public class UpdateInfoFragment extends Fragment {
         doneBtn = passwordDialog.findViewById(R.id.done_btn);
         //////////password dialog
 
+        //////////loading dialog
+        loadingDialog = new Dialog(getContext());
+        loadingDialog.setContentView(R.layout.loading_progress_dialog);
+        loadingDialog.setCancelable(false);
+        loadingDialog.getWindow().setBackgroundDrawable(getContext().getDrawable(R.drawable.slider_background));
+        loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        loadingAnim = loadingDialog.findViewById(R.id.loading_anim);
+        Glide.with(loadingDialog.getContext()).load(R.drawable.loading).into(loadingAnim);
+        //////////loading dialog
+
         selectPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,6 +173,7 @@ public class UpdateInfoFragment extends Fragment {
         updatePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                loadingDialog.show();
                 uploadPhotoInFirebase();
             }
         });
@@ -251,7 +266,8 @@ public class UpdateInfoFragment extends Fragment {
                 } else if (inputEmail.equals(previousEmail)) {
                     Toast.makeText(getContext(), "You do not change your Email!", Toast.LENGTH_SHORT).show();
                 } else {
-                    updateEmailInFirebase();
+
+                    updateEmailInFirebase(previousEmail, inputEmail);
                 }
 
             }
@@ -261,8 +277,48 @@ public class UpdateInfoFragment extends Fragment {
         return view;
     }
 
-    private void updateEmailInFirebase() {
+    private void updateEmailInFirebase(String previousEmail, String inputEmail) {
         Toast.makeText(getContext(), "You are changing your Email.", Toast.LENGTH_SHORT).show();
+        passwordDialog.show();
+        doneBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                passwordDialog.dismiss();
+                loadingDialog.show();
+                String inputPassword = editTextpassword.getText().toString();
+                AuthCredential credential = EmailAuthProvider.getCredential(previousEmail, inputPassword);
+                user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                               user.updateEmail(inputEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                   @Override
+                                   public void onComplete(@NonNull Task<Void> task) {
+                                          if(task.isSuccessful()){
+                                              FirebaseFirestore.getInstance().collection("USERS").document(user.getUid())
+                                                      .update("email", inputEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                  @Override
+                                                  public void onComplete(@NonNull Task<Void> task) {
+                                                      if (task.isSuccessful()) {
+                                                          loadingDialog.dismiss();
+                                                          Toast.makeText(getContext(), "Your Email updated Successfully!", Toast.LENGTH_SHORT).show();
+                                                      } else {
+                                                          Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                      }
+                                                  }
+                                              });
+                                             }else {
+                                              Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                          }
+                                   }
+                               });
+                        } else {
+                            Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private void updateNameInFirebase(String name) {
@@ -306,6 +362,7 @@ public class UpdateInfoFragment extends Fragment {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
+                                                    loadingDialog.dismiss();
                                                     Toast.makeText(getContext(), "Image uploaded Successfully.", Toast.LENGTH_SHORT).show();
                                                     Log.d(TAG, "onComplete:Image url is : " + imgUrl);
                                                 } else {
