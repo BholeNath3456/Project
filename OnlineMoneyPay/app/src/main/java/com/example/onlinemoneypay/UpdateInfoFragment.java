@@ -162,19 +162,20 @@ public class UpdateInfoFragment extends Fragment {
                 uploadPhotoInFirebase();
             }
         });
-        String inputName=editTextinputName.getText().toString().trim();
-        String inputEmail=editTextinputEmail.getText().toString().trim();
+        String inputName = editTextinputName.getText().toString().trim();
+        String inputEmail = editTextinputEmail.getText().toString().trim();
 
         editTextinputName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 //checkInputs();
 
-                String inputName=editTextinputName.getText().toString().trim();
+                String inputName = editTextinputName.getText().toString().trim();
                 if (inputName.length() < 3) {
                     editTextinputName.setError("Name should be greater than 3 character");
                     editTextinputName.setFocusable(true);
@@ -184,7 +185,7 @@ public class UpdateInfoFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
 
-                String inputName=editTextinputName.getText().toString().trim();
+                String inputName = editTextinputName.getText().toString().trim();
                 if (inputName.isEmpty()) {
                     editTextinputName.setError("Name required!");
                     editTextinputName.setFocusable(true);
@@ -196,18 +197,20 @@ public class UpdateInfoFragment extends Fragment {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String inputEmail=editTextinputEmail.getText().toString().trim();
+                String inputEmail = editTextinputEmail.getText().toString().trim();
                 if (!inputEmail.matches(String.valueOf(Patterns.EMAIL_ADDRESS))) {
                     editTextinputEmail.setError("Invalid Email!");
                     editTextinputEmail.setFocusable(true);
 
                 }
             }
+
             @Override
             public void afterTextChanged(Editable s) {
-                String inputEmail=editTextinputEmail.getText().toString().trim();
+                String inputEmail = editTextinputEmail.getText().toString().trim();
 
                 if (inputEmail.isEmpty()) {
                     editTextinputEmail.setError("Email Required!");
@@ -220,18 +223,17 @@ public class UpdateInfoFragment extends Fragment {
         updateName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String inputName=editTextinputName.getText().toString().trim();
+                String inputName = editTextinputName.getText().toString().trim();
                 if (inputName.length() < 3) {
                     editTextinputName.setError("Name should be greater than 3 character");
                     editTextinputName.setFocusable(true);
-                }else if (inputName.isEmpty()) {
+                } else if (inputName.isEmpty()) {
                     editTextinputName.setError("Name required!");
                     editTextinputName.setFocusable(true);
-                }else if(inputName.equals(previousName)){
+                } else if (inputName.equals(previousName)) {
                     Toast.makeText(getContext(), "You do not change your name!", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    updateNameInFirebase();
+                } else {
+                    updateNameInFirebase(inputName);
                 }
 
             }
@@ -239,16 +241,16 @@ public class UpdateInfoFragment extends Fragment {
         updateEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String inputEmail=editTextinputEmail.getText().toString().trim();
+                String inputEmail = editTextinputEmail.getText().toString().trim();
                 if (!inputEmail.matches(String.valueOf(Patterns.EMAIL_ADDRESS))) {
                     editTextinputEmail.setError("Invalid Email!");
                     editTextinputEmail.setFocusable(true);
-                }else if (inputEmail.isEmpty()) {
+                } else if (inputEmail.isEmpty()) {
                     editTextinputEmail.setError("Email Required!");
                     editTextinputEmail.setFocusable(true);
-                }else if(inputEmail.equals(previousEmail)){
+                } else if (inputEmail.equals(previousEmail)) {
                     Toast.makeText(getContext(), "You do not change your Email!", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     updateEmailInFirebase();
                 }
 
@@ -263,8 +265,20 @@ public class UpdateInfoFragment extends Fragment {
         Toast.makeText(getContext(), "You are changing your Email.", Toast.LENGTH_SHORT).show();
     }
 
-    private void updateNameInFirebase() {
+    private void updateNameInFirebase(String name) {
         Toast.makeText(getContext(), "You are changing your Name.", Toast.LENGTH_SHORT).show();
+        FirebaseFirestore.getInstance().collection("USERS").document(user.getUid())
+                .update("name", name).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(getContext(), "Name updated successfully!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 
     private String getFileExtension(Uri uri) {
@@ -272,6 +286,7 @@ public class UpdateInfoFragment extends Fragment {
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cr.getType(uri));
     }
+
     private void uploadPhotoInFirebase() {
         if (uri != null) {
             fileReference = mStorageReference.child(user.getUid() + "" + getFileExtension(uri));
@@ -313,6 +328,7 @@ public class UpdateInfoFragment extends Fragment {
             Toast.makeText(getContext(), "No File Selected.", Toast.LENGTH_SHORT).show();
         }
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -330,6 +346,7 @@ public class UpdateInfoFragment extends Fragment {
             }
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
