@@ -64,6 +64,7 @@
         android:text="27 ratings"
 
         android:textSize="12sp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
@@ -292,6 +293,7 @@
         android:orientation="vertical"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/ratings_progressbar_container"
         app:layout_constraintStart_toEndOf="@+id/ratings_progressbar_container"
         app:layout_constraintTop_toTopOf="@+id/ratings_progressbar_container">
@@ -359,6 +361,7 @@
         android:text="20"
         android:textSize="12sp"
         android:textStyle="bold"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/ratings_numbers_container"
         app:layout_constraintStart_toStartOf="@+id/ratings_numbers_container"
         app:layout_constraintTop_toBottomOf="@+id/divider3" />
