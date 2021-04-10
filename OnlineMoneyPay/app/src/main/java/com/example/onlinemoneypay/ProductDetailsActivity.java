@@ -467,25 +467,28 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 showDialogRecyclerView();
             }
         });
-        applyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USERS_REWARDS").document(selectedRewardId)
-                        .update("is_applied", true).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "onClick: " + selectedRewardId);
-                            Toast.makeText(ProductDetailsActivity.this, "Congratulation, coupen has been Applied!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            String error = task.getException().getMessage();
-                            Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
 
-            }
-        });
+            applyBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USERS_REWARDS").document(selectedRewardId)
+                            .update("is_applied", true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "onClick: " + selectedRewardId);
+                                Toast.makeText(ProductDetailsActivity.this, "Congratulation, coupen has been Applied!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                String error = task.getException().getMessage();
+                                Toast.makeText(ProductDetailsActivity.this, error, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+                }
+            });
+
+
         /////// coupen  diaglog....
 
         coupenRedeemBtn.setOnClickListener(new View.OnClickListener() {
