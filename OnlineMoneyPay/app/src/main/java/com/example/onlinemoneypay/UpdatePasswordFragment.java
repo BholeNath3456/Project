@@ -170,8 +170,11 @@ public class UpdatePasswordFragment extends Fragment {
             public void onClick(View v) {
                 String password = editTextNewPassword.getText().toString().trim();
                 String confirmPassword = editTextConfirmNewPassword.getText().toString().trim();
-
-                if (password.length() < 6) {
+                String oldPassword= editTextOldPassword.getText().toString();
+                if(oldPassword.isEmpty()){
+                    editTextOldPassword.setError("Password Required!");
+                    editTextOldPassword.setFocusable(true);
+                }else if (password.length() < 6) {
                     editTextNewPassword.setError("Password must be more than 6 character");
                     editTextNewPassword.setFocusable(true);
                 } else if (password.isEmpty()) {
@@ -201,31 +204,38 @@ public class UpdatePasswordFragment extends Fragment {
         Log.d(TAG, "updatePasswordInFirebase: Your old password is "+oldPassword);
         Toast.makeText(getContext(), "You are changing your password!", Toast.LENGTH_SHORT).show();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+         if(oldPassword.isEmpty()){
+             editTextOldPassword.setError("Password Required!");
+             editTextOldPassword.setFocusable(true);
+         }else {
+             AuthCredential credential = EmailAuthProvider.getCredential(previousEmail, oldPassword);
+             user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                 @Override
+                 public void onComplete(@NonNull Task<Void> task) {
+                     if(task.isSuccessful()){
+                         user.updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
+                             @Override
+                             public void onComplete(@NonNull Task<Void> task) {
+                                 if(task.isSuccessful()){
+                                     loadingDialog.dismiss();
+                                     Intent registerIntent=new Intent(getContext(),RegisterActivity.class);
+                                     getActivity().startActivity(registerIntent);
+                                     getActivity().finish();
+                                     Toast.makeText(getContext(), "Your password is updated!", Toast.LENGTH_SHORT).show();
+                                 }else {
+                                     loadingDialog.dismiss();
+                                     Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                 }
+                             }
+                         });
+                     }else {
+                         loadingDialog.dismiss();
+                         Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                     }
+                 }
+             });
 
-        AuthCredential credential = EmailAuthProvider.getCredential(previousEmail, oldPassword);
-        user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-               if(task.isSuccessful()){
-                   user.updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
-                       @Override
-                       public void onComplete(@NonNull Task<Void> task) {
-                         if(task.isSuccessful()){
-                             loadingDialog.dismiss();
-                             Intent registerIntent=new Intent(getContext(),RegisterActivity.class);
-                             getActivity().startActivity(registerIntent);
-                             getActivity().finish();
-                             Toast.makeText(getContext(), "Your password is updated!", Toast.LENGTH_SHORT).show();
-                         }else {
-                             Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                         }
-                       }
-                   });
-               }else {
-                   Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-               }
-            }
-        });
+         }
 
     }
 }
